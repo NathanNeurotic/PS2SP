@@ -1,31 +1,32 @@
 ---
 name: "Open PS2 Loader"
 slug: "open-ps2-loader"
-summary: "Open-source game and application loader for the PlayStation 2."
+summary: "Game and application loader for Sony PlayStation 2."
 categories:
-  - loaders
-  - utilities
+  - "loaders"
+  - "utilities"
 tags:
-  - opl
-  - homebrew
+  - "opl"
+  - "hdloader"
+  - "homebrew"
 features:
-  - usb
-  - hdd
-  - network
-  - mx4sio
+  - "usb"
+  - "hdd"
+  - "network"
+  - "mx4sio"
 authors: []
-license: null
-homepage: null
+license: "AFL-3.0"
+homepage: "https://ps2homebrew.github.io/Open-PS2-Loader/"
 source:
   provider: github
-  repository: ps2homebrew/Open-PS2-Loader
-  repositoryId: null
+  repository: "ps2homebrew/Open-PS2-Loader"
+  repositoryId: "70989832"
 repository:
   archived: false
-  defaultBranch: master
-  stars: 0
-  forks: 0
-  lastCommit: null
+  defaultBranch: "master"
+  stars: 3062
+  forks: 443
+  lastCommit: "2026-06-07T00:33:22Z"
 latestRelease:
   tag: null
   name: null
@@ -42,4 +43,4 @@ verified: true
 featured: true
 ---
 
-Open PS2 Loader is one of the core projects in the modern PlayStation 2 homebrew ecosystem. PS2SP tracks the upstream repository and release information rather than hosting independent binaries.
+Open PS2 Loader (OPL) is a widely used open-source loader for PlayStation 2 games and applications. PS2SP tracks the upstream project and links users to its official source and releases.
