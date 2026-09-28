@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { categoryLabel, getProjects } from "../../lib/catalog";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  const categories = [...new Set(projects.flatMap((project) => project.data.categories))];
+  return categories.map((category) => ({
+    params: { category },
+    props: { category, projects: projects.filter((project) => project.data.categories.includes(category)) }
+  }));
+}
+
+const { category, projects } = Astro.props;
+---
+
+<BaseLayout title={categoryLabel(category)}>
+  <section>
+    <p class="eyebrow">Category</p>
+    <h1>{categoryLabel(category)}</h1>
+    <p class="lead">{projects.length} indexed {projects.length === 1 ? "project" : "projects"}.</p>
+  </section>
+  <div class="grid section">
+    {projects.map((project) => (
+      <a class="card" href={`/project/${project.data.slug}`}>
+        <h3>{project.data.name}</h3>
+        <p>{project.data.summary}</p>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

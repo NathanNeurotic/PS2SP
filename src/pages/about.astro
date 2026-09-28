@@ -1,0 +1,17 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getSite } from "../lib/catalog";
+
+const entry = await getSite();
+const { Content } = await render(entry);
+---
+
+<BaseLayout title="About">
+  <section>
+    <p class="eyebrow">About</p>
+    <h1>{entry.data.longTitle}</h1>
+    <p class="lead">{entry.data.description}</p>
+  </section>
+  <article class="prose section"><Content /></article>
+</BaseLayout>

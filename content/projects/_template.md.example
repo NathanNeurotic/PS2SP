@@ -1,0 +1,44 @@
+---
+name: "Project Name"
+slug: "project-name"
+summary: "One-sentence description of the project."
+categories:
+  - utilities
+tags:
+  - ps2
+features: []
+authors: []
+license: null
+homepage: null
+source:
+  provider: github
+  repository: owner/repository
+  repositoryId: null
+repository:
+  archived: false
+  defaultBranch: main
+  stars: 0
+  forks: 0
+  lastCommit: null
+latestRelease:
+  tag: null
+  name: null
+  publishedAt: null
+  url: null
+activity:
+  lastChecked: null
+automation:
+  sync: true
+discovery:
+  method: curated
+  confidence: 100
+verified: false
+featured: false
+---
+
+Write the human-maintained project description here.
+
+## Highlights
+
+- Add project-specific information.
+- Link to documentation in Markdown when useful.

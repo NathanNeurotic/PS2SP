@@ -1,0 +1,9 @@
+[
+  {"id":"usb","label":"USB"},
+  {"id":"hdd","label":"Internal HDD"},
+  {"id":"network","label":"Network"},
+  {"id":"smb","label":"SMB"},
+  {"id":"mx4sio","label":"MX4SIO"},
+  {"id":"mmce","label":"MMCE"},
+  {"id":"memory-card","label":"Memory Card"}
+]

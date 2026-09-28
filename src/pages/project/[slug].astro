@@ -1,0 +1,52 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { categoryLabel, formatDate, getProjects } from "../../lib/catalog";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.data.slug },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const sourceUrl = project.data.source.provider === "github" && project.data.source.repository
+  ? `https://github.com/${project.data.source.repository}`
+  : project.data.source.url;
+---
+
+<BaseLayout title={project.data.name} description={project.data.summary}>
+  <header class="project-header">
+    <div>
+      <p class="eyebrow">{project.data.categories.map(categoryLabel).join(" · ")}</p>
+      <h1>{project.data.name}</h1>
+      <p class="lead">{project.data.summary}</p>
+    </div>
+    <div class="actions">
+      {project.data.latestRelease.url && <a class="button primary" href={project.data.latestRelease.url}>Latest release</a>}
+      {sourceUrl && <a class="button" href={sourceUrl}>Source</a>}
+      {project.data.homepage && <a class="button" href={project.data.homepage}>Website</a>}
+    </div>
+  </header>
+
+  <section class="detail-grid">
+    <div class="detail"><span>Latest release</span><strong>{project.data.latestRelease.tag ?? "No tracked release"}</strong></div>
+    <div class="detail"><span>Release date</span><strong>{formatDate(project.data.latestRelease.publishedAt)}</strong></div>
+    <div class="detail"><span>Last commit</span><strong>{formatDate(project.data.repository.lastCommit)}</strong></div>
+    <div class="detail"><span>Repository</span><strong>{project.data.source.provider}</strong></div>
+    <div class="detail"><span>Stars</span><strong>{project.data.repository.stars.toLocaleString()}</strong></div>
+    <div class="detail"><span>Upstream status</span><strong>{project.data.repository.archived ? "Archived" : "Not archived"}</strong></div>
+  </section>
+
+  <article class="prose"><Content /></article>
+
+  {project.data.features.length > 0 && (
+    <section class="section">
+      <p class="eyebrow">Capabilities</p>
+      <div class="meta">{project.data.features.map((feature) => <span class="pill">{feature}</span>)}</div>
+    </section>
+  )}
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { formatDate, getProjects, projectUpdatedAt } from "../lib/catalog";
+
+const projects = (await getProjects()).sort((a, b) =>
+  new Date(projectUpdatedAt(b)).getTime() - new Date(projectUpdatedAt(a)).getTime()
+);
+---
+
+<BaseLayout title="Recent updates">
+  <section>
+    <p class="eyebrow">Upstream activity</p>
+    <h1>Recent updates</h1>
+    <p class="lead">Release and repository timestamps are synchronized from upstream sources. A quiet project is not automatically treated as abandoned.</p>
+  </section>
+
+  <div class="grid section">
+    {projects.map((project) => (
+      <a class="card" href={`/project/${project.data.slug}`}>
+        <h3>{project.data.name}</h3>
+        <p>{project.data.latestRelease.tag ? `Release ${project.data.latestRelease.tag}` : "Repository activity"}</p>
+        <div class="meta"><span class="pill">{formatDate(projectUpdatedAt(project))}</span></div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

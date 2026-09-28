@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { categoryLabel, formatDate, getProjects, getSite, projectUpdatedAt } from "../lib/catalog";
+
+const site = (await getSite()).data;
+const projects = await getProjects();
+const featured = projects.filter((project) => project.data.featured).slice(0, 6);
+const recent = [...projects].sort((a, b) =>
+  new Date(projectUpdatedAt(b)).getTime() - new Date(projectUpdatedAt(a)).getTime()
+).slice(0, 6);
+
+const categories = new Map<string, number>();
+for (const project of projects) {
+  for (const category of project.data.categories) {
+    categories.set(category, (categories.get(category) ?? 0) + 1);
+  }
+}
+
+const released = projects.filter((project) => project.data.latestRelease.tag).length;
+const active = projects.filter((project) => !project.data.repository.archived).length;
+---
+
+<BaseLayout>
+  <section class="hero">
+    <p class="eyebrow">PlayStation 2 homebrew index</p>
+    <h1>Software Plaza.</h1>
+    <p class="lead">{site.tagline} PS2SP tracks upstream source code, releases and development activity while keeping the catalog itself in plain Markdown.</p>
+    <div class="actions">
+      <a class="button primary" href="/projects">Browse software</a>
+      <a class="button" href="/updates">Recent updates</a>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Catalog statistics">
+    <div class="stat"><strong>{projects.length}</strong><span>indexed projects</span></div>
+    <div class="stat"><strong>{categories.size}</strong><span>categories</span></div>
+    <div class="stat"><strong>{released}</strong><span>with releases</span></div>
+    <div class="stat"><strong>{active}</strong><span>unarchived upstreams</span></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div><p class="eyebrow">Featured</p><h2>Core projects</h2></div>
+      <a href="/projects">View all →</a>
+    </div>
+    <div class="grid">
+      {featured.map((project) => (
+        <a class="card" href={`/project/${project.data.slug}`}>
+          <h3>{project.data.name}</h3>
+          <p>{project.data.summary}</p>
+          <div class="meta">
+            {project.data.categories.slice(0, 2).map((category) => <span class="pill">{categoryLabel(category)}</span>)}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div><p class="eyebrow">Activity</p><h2>Recently updated</h2></div>
+      <a href="/updates">All updates →</a>
+    </div>
+    <div class="grid">
+      {recent.map((project) => (
+        <a class="card" href={`/project/${project.data.slug}`}>
+          <h3>{project.data.name}</h3>
+          <p>{project.data.latestRelease.tag ? `Latest release: ${project.data.latestRelease.tag}` : "Tracking upstream development"}</p>
+          <div class="meta"><span class="pill">{formatDate(projectUpdatedAt(project))}</span></div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">Explore</p><h2>Categories</h2></div></div>
+    <div class="category-list">
+      {[...categories.entries()].sort((a, b) => b[1] - a[1]).map(([id, count]) => (
+        <a class="category-link" href={`/category/${id}`}>{categoryLabel(id)} · {count}</a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
