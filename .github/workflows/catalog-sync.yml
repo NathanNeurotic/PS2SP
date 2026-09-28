@@ -43,7 +43,7 @@ jobs:
 
       - name: Commit catalog changes
         run: |
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain -- content/projects discovery/pending)" ]; then
             echo "Catalog already current."
             exit 0
           fi
