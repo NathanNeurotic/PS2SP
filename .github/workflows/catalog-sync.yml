@@ -36,6 +36,9 @@ jobs:
       - name: Discover PS2 projects
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_DISCOVERY_API_REQUESTS: "450"
+          GITHUB_CORE_RATE_LIMIT_RESERVE: "250"
+          GITHUB_SEARCH_RATE_LIMIT_RESERVE: "2"
         run: npm run catalog:discover
 
       - name: Validate site

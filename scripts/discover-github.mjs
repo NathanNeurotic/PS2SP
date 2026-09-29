@@ -20,32 +20,67 @@ const headers = {
 
 const discoveryActivityDays = Number.parseInt(process.env.DISCOVERY_ACTIVITY_DAYS ?? "180", 10);
 const activityCutoff = Date.now() - discoveryActivityDays * 24 * 60 * 60 * 1000;
-const maxForkPagesPerProject = Number.parseInt(process.env.MAX_FORK_PAGES_PER_PROJECT ?? "10", 10);
-const maxOwnerExpansions = Number.parseInt(process.env.MAX_OWNER_EXPANSIONS ?? "24", 10);
-const maxSearchPages = Number.parseInt(process.env.MAX_SEARCH_PAGES ?? "3", 10);
-const maxOwnerRepos = Number.parseInt(process.env.MAX_OWNER_REPOS ?? "100", 10);
 
-async function github(endpoint) {
-  const response = await fetch(`https://api.github.com${endpoint}`, { headers });
-  if (response.status === 404) return null;
-  if (!response.ok) throw new Error(`GitHub API ${response.status}: ${await response.text()}`);
-  return response.json();
+const maxSearchPages = Number.parseInt(process.env.MAX_SEARCH_PAGES ?? "2", 10);
+const maxEnrichedCandidates = Number.parseInt(process.env.MAX_ENRICHED_CANDIDATES ?? "90", 10);
+const maxForkCandidates = Number.parseInt(process.env.MAX_FORK_CANDIDATES ?? "30", 10);
+const maxOwnerExpansions = Number.parseInt(process.env.MAX_OWNER_EXPANSIONS ?? "10", 10);
+const maxOwnerRepos = Number.parseInt(process.env.MAX_OWNER_REPOS ?? "30", 10);
+const maxApiRequests = Number.parseInt(process.env.MAX_DISCOVERY_API_REQUESTS ?? "450", 10);
+const coreRateLimitReserve = Number.parseInt(process.env.GITHUB_CORE_RATE_LIMIT_RESERVE ?? "250", 10);
+const searchRateLimitReserve = Number.parseInt(process.env.GITHUB_SEARCH_RATE_LIMIT_RESERVE ?? "2", 10);
+
+let requestCount = 0;
+let stoppedForRateLimit = false;
+
+class DiscoveryBudgetStop extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DiscoveryBudgetStop";
+  }
 }
 
-async function githubForks(repository) {
-  const forks = [];
+function rateLimitReserve(resource) {
+  return resource === "search" ? searchRateLimitReserve : coreRateLimitReserve;
+}
 
-  for (let page = 1; page <= maxForkPagesPerProject; page++) {
-    const batch = await github(
-      `/repos/${repository}/forks?sort=newest&per_page=100&page=${page}`
+async function github(endpoint) {
+  if (requestCount >= maxApiRequests) {
+    throw new DiscoveryBudgetStop(
+      `PS2SP discovery request budget reached (${maxApiRequests}). Remaining candidates will be checked on a later run.`
     );
-
-    if (!Array.isArray(batch) || batch.length === 0) break;
-    forks.push(...batch);
-    if (batch.length < 100) break;
   }
 
-  return forks;
+  requestCount++;
+  const response = await fetch(`https://api.github.com${endpoint}`, { headers });
+
+  const resource = response.headers.get("x-ratelimit-resource") ?? "core";
+  const remainingRaw = response.headers.get("x-ratelimit-remaining");
+  const remaining = remainingRaw == null ? null : Number.parseInt(remainingRaw, 10);
+  const reset = response.headers.get("x-ratelimit-reset");
+
+  if (response.status === 404) return null;
+
+  if (response.status === 403 && (remaining === 0 || /rate limit/i.test(await response.clone().text()))) {
+    const resetText = reset
+      ? new Date(Number(reset) * 1000).toISOString()
+      : "the next GitHub rate-limit window";
+    throw new DiscoveryBudgetStop(
+      `GitHub ${resource} API rate limit reached after ${requestCount} discovery requests; reset: ${resetText}. Partial discovery results will be kept.`
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(`GitHub API ${response.status}: ${await response.text()}`);
+  }
+
+  if (remaining != null && remaining <= rateLimitReserve(resource)) {
+    throw new DiscoveryBudgetStop(
+      `Stopping discovery with ${remaining} GitHub ${resource} requests remaining (reserve: ${rateLimitReserve(resource)}). Partial discovery results will be kept.`
+    );
+  }
+
+  return response.json();
 }
 
 const queries = [
@@ -87,19 +122,6 @@ for (const name of existingFiles) {
 const candidates = new Map();
 const processed = new Set();
 const ownerSeeds = new Map();
-
-for (const query of queries) {
-  for (let page = 1; page <= maxSearchPages; page++) {
-    const result = await github(
-      `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=100&page=${page}`
-    );
-
-    const items = result?.items ?? [];
-    for (const repo of items) candidates.set(String(repo.id), repo);
-
-    if (items.length < 100) break;
-  }
-}
 
 function slugify(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -236,7 +258,6 @@ function evaluateMaturity(repo, readmeText, releases) {
 
 function releaseHasPs2Signal(release) {
   if (!release) return false;
-
   if (hasPs2Token(release.name) || hasPs2Token(release.tag_name)) return true;
   return (release.assets ?? []).some((asset) => hasPs2Token(asset.name));
 }
@@ -272,6 +293,28 @@ function catalogProjectForFork(repo) {
   return knownProjects.find((project) =>
     lineage.has(project.repository.toLowerCase())
   ) ?? null;
+}
+
+function coarseScore(repo) {
+  const topics = repo?.topics ?? [];
+  let score = 0;
+
+  if (topics.includes("ps2-homebrew")) score += 50;
+  if (topics.includes("playstation-2") || topics.includes("ps2")) score += 35;
+  if (hasPs2Token(repo?.name)) score += 50;
+  if (hasPs2Token(repo?.description)) score += 40;
+  if (isRecent(repo?.pushed_at)) score += 10;
+  if (repo?.fork) score += 5;
+
+  return Math.min(score, 100);
+}
+
+function candidatePriority(repo) {
+  let score = coarseScore(repo);
+  if (repo?.fork) score += 10;
+  if ((repo?.stargazers_count ?? 0) > 10) score += 5;
+  if ((repo?.stargazers_count ?? 0) > 50) score += 5;
+  return score;
 }
 
 async function fileExists(url) {
@@ -310,7 +353,7 @@ async function verifyMaintainedFork(repo, release) {
   };
 }
 
-function scoreRepository({ repo, readmeText, release, rootNames, branches, forkStatus }) {
+function scoreRepository({ repo, readmeText, release, branches, forkStatus }) {
   const topics = repo.topics ?? [];
   let score = 0;
   const evidence = [];
@@ -343,11 +386,6 @@ function scoreRepository({ repo, readmeText, release, rootNames, branches, forkS
   if (hasAny(readmeText, [/ps2sdk/i, /\$PS2DEV/i, /ee-g(cc|\+\+)/i, /gskit/i, /ps2build/i])) {
     score += 25;
     evidence.push("README contains PS2 development/toolchain evidence");
-  }
-
-  if (rootNames.some((name) => ["makefile", "cmakelists.txt", "build.sh"].includes(name))) {
-    score += 5;
-    evidence.push("native build files present");
   }
 
   if (branchHasPs2Signal(branches)) {
@@ -398,40 +436,62 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
 
   if (known.has(candidate.full_name.toLowerCase()) || known.has(`id:${candidate.id}`)) return;
 
-  const repo = prefetched.repo ?? (await github(`/repos/${candidate.full_name}`));
+  // Search results already contain most repository metadata. Only fetch the full
+  // repository object when a fork needs parent/source lineage.
+  const repo =
+    prefetched.repo ??
+    (candidate.fork ? await github(`/repos/${candidate.full_name}`) : candidate);
+
   if (!repo || repo.archived || repo.disabled) return;
 
-  const [readme, releases, root, branches] = await Promise.all([
-    github(`/repos/${repo.full_name}/readme`),
-    prefetched.releases ?? github(`/repos/${repo.full_name}/releases?per_page=10`),
-    github(`/repos/${repo.full_name}/contents`),
-    prefetched.branches ?? github(`/repos/${repo.full_name}/branches?per_page=100`)
-  ]);
+  const releases =
+    prefetched.releases ??
+    (await github(`/repos/${repo.full_name}/releases?per_page=10`)) ??
+    [];
+
+  const stableRelease = latestStableRelease(releases);
+  const publishedRelease = latestPublishedRelease(releases);
+
+  // README and branch calls are the expensive enrichment layer. Only perform them
+  // when search-result metadata + release metadata did not already make the candidate
+  // obviously irrelevant.
+  const preliminaryStrong =
+    coarseScore(repo) >= 70 ||
+    releaseHasPs2Signal(stableRelease ?? publishedRelease) ||
+    releaseHasElf(stableRelease ?? publishedRelease);
+
+  if (!preliminaryStrong) return;
 
   let readmeText = "";
-  if (readme?.content) {
-    readmeText = Buffer.from(readme.content.replace(/\n/g, ""), "base64").toString("utf8");
+  if (!explicitRepositorySignal(repo)) {
+    const readme = await github(`/repos/${repo.full_name}/readme`);
+    if (readme?.content) {
+      readmeText = Buffer.from(readme.content.replace(/\n/g, ""), "base64").toString("utf8");
+    }
+  }
+
+  let branches = prefetched.branches ?? [];
+  if (
+    !explicitRepositorySignal(repo) &&
+    !releaseHasPs2Signal(stableRelease ?? publishedRelease)
+  ) {
+    branches = (await github(`/repos/${repo.full_name}/branches?per_page=100`)) ?? [];
   }
 
   const maturity = evaluateMaturity(repo, readmeText, releases);
   const release = maturity.stableRelease ?? maturity.publishedRelease;
-  const rootNames = Array.isArray(root) ? root.map((item) => item.name.toLowerCase()) : [];
   const forkCatalogProject = repo.fork ? catalogProjectForFork(repo) : null;
   const forkStatus =
     repo.fork && forkCatalogProject
       ? await verifyMaintainedFork(repo, maturity.stableRelease)
       : null;
 
-  // Forks are intentionally stricter: they must belong to the fork network of an
-  // existing catalog project, be independently maintained, and have a published
-  // non-prerelease release before they can enter discovery.
   if (repo.fork && (!forkCatalogProject || !forkStatus)) return;
 
   const { score, evidence } = scoreRepository({
     repo,
     readmeText,
     release,
-    rootNames,
     branches: Array.isArray(branches) ? branches : [],
     forkStatus
   });
@@ -473,7 +533,6 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     if (await fileExists(target)) return;
 
     const parentCatalog = repo.fork ? forkCatalogProject : null;
-
     const method = repo.fork ? "github-maintained-fork-search" : origin;
     const tags = repo.fork
       ? [...new Set([...(parentCatalog?.tags ?? []), "maintained-fork", "auto-discovered"])]
@@ -543,129 +602,81 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
   }
 }
 
-for (const candidate of candidates.values()) {
-  await processCandidate(candidate);
-}
+async function discover() {
+  for (const query of queries) {
+    for (let page = 1; page <= maxSearchPages; page++) {
+      const result = await github(
+        `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=100&page=${page}`
+      );
 
-// A PS2 port can live on a non-default branch while the default README remains unchanged.
-// Once global discovery finds a strong PS2 repository, inspect that same owner's other
-// recently-pushed repositories for PS2 branch/release signals. This is generic graph
-// expansion from discovered evidence, not a maintainer allowlist.
-for (const [owner, seededType] of [...ownerSeeds.entries()].slice(0, maxOwnerExpansions)) {
-  let ownerType = seededType;
-  if (!ownerType) {
-    const ownerInfo = await github(`/users/${owner}`);
-    ownerType = ownerInfo?.type ?? "User";
+      const items = result?.items ?? [];
+      for (const repo of items) candidates.set(String(repo.id), repo);
+      if (items.length < 100) break;
+    }
   }
 
-  const endpoint =
-    ownerType === "Organization"
-      ? `/orgs/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`
-      : `/users/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`;
+  const ranked = [...candidates.values()]
+    .filter((repo) => !known.has(repo.full_name.toLowerCase()) && !known.has(`id:${repo.id}`))
+    .sort((a, b) => candidatePriority(b) - candidatePriority(a));
 
-  const repos = await github(endpoint);
-  if (!Array.isArray(repos)) continue;
+  const forks = ranked.filter((repo) => repo.fork).slice(0, maxForkCandidates);
+  const nonForks = ranked.filter((repo) => !repo.fork).slice(0, maxEnrichedCandidates);
 
-  for (const repo of repos) {
-    if (!repo?.full_name || processed.has(String(repo.id))) continue;
-    if (known.has(repo.full_name.toLowerCase()) || known.has(`id:${repo.id}`)) continue;
-    if (repo.archived || repo.disabled || !isRecent(repo.pushed_at)) continue;
+  for (const candidate of [...forks, ...nonForks]) {
+    await processCandidate(candidate);
+  }
 
-    const [branches, releases] = await Promise.all([
-      github(`/repos/${repo.full_name}/branches?per_page=100`),
-      github(`/repos/${repo.full_name}/releases?per_page=10`)
-    ]);
+  // Generic graph expansion: once global discovery finds a strong PS2 repository,
+  // inspect a small bounded set of that owner's newest repositories. This catches
+  // branch-only PS2 work without hardcoding any maintainer.
+  for (const [owner, seededType] of [...ownerSeeds.entries()].slice(0, maxOwnerExpansions)) {
+    let ownerType = seededType;
+    if (!ownerType) {
+      const ownerInfo = await github(`/users/${owner}`);
+      ownerType = ownerInfo?.type ?? "User";
+    }
 
-    const release = latestPublishedRelease(releases);
-    const relatedSignal =
-      explicitRepositorySignal(repo) ||
-      branchHasPs2Signal(Array.isArray(branches) ? branches : []) ||
-      releaseHasPs2Signal(release);
+    const endpoint =
+      ownerType === "Organization"
+        ? `/orgs/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`
+        : `/users/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`;
 
-    if (!relatedSignal) continue;
+    const repos = await github(endpoint);
+    if (!Array.isArray(repos)) continue;
 
-    await processCandidate(repo, "github-related-owner", {
-      repo,
-      branches: Array.isArray(branches) ? branches : [],
-      releases: Array.isArray(releases) ? releases : []
-    });
+    for (const repo of repos) {
+      if (!repo?.full_name || processed.has(String(repo.id))) continue;
+      if (known.has(repo.full_name.toLowerCase()) || known.has(`id:${repo.id}`)) continue;
+      if (repo.archived || repo.disabled || !isRecent(repo.pushed_at)) continue;
+
+      // Avoid two API calls for every sibling repo. Only branch-enrich recent sibling
+      // repositories; release metadata is fetched later by processCandidate.
+      let branches = [];
+      if (!explicitRepositorySignal(repo)) {
+        branches = (await github(`/repos/${repo.full_name}/branches?per_page=100`)) ?? [];
+      }
+
+      if (!explicitRepositorySignal(repo) && !branchHasPs2Signal(branches)) continue;
+
+      await processCandidate(repo, "github-related-owner", {
+        repo,
+        branches: Array.isArray(branches) ? branches : []
+      });
+    }
   }
 }
 
-// Also inspect forks of already-cataloged PS2 projects. These inherit the parent's categories
-// and features, but only when they are demonstrably maintained and have a published release.
-for (const parent of knownProjects) {
-  const forks = await githubForks(parent.repository);
-
-  for (const fork of forks) {
-    if (!fork?.fork || fork.archived || fork.disabled) continue;
-    if (known.has(fork.full_name.toLowerCase()) || known.has(`id:${fork.id}`)) continue;
-    if (!isRecent(fork.pushed_at)) continue;
-
-    const repo = await github(`/repos/${fork.full_name}`);
-    if (!repo) continue;
-
-    const releases = await github(`/repos/${fork.full_name}/releases?per_page=10`);
-    const release = latestStableRelease(releases);
-    const forkCatalogProject = catalogProjectForFork(repo);
-    const forkStatus = forkCatalogProject ? await verifyMaintainedFork(repo, release) : null;
-    if (!forkCatalogProject || !forkStatus) continue;
-
-    const slug = slugify(`${repo.name}-${repo.owner.login}`);
-    const target = new URL(`${slug}.md`, projectsDir);
-    if (await fileExists(target)) continue;
-
-    const project = {
-      name: repo.name,
-      slug,
-      summary:
-        repo.description ||
-        `Actively maintained fork of ${parent.name} with its own commits and published releases.`,
-      categories: forkCatalogProject.categories,
-      tags: [...new Set([...forkCatalogProject.tags, "maintained-fork", "auto-discovered"])],
-      features: forkCatalogProject.features,
-      authors: [],
-      license: repo.license?.spdx_id ?? null,
-      homepage: repo.homepage || null,
-      source: {
-        provider: "github",
-        repository: repo.full_name,
-        repositoryId: String(repo.id)
-      },
-      repository: {
-        archived: Boolean(repo.archived),
-        defaultBranch: repo.default_branch ?? null,
-        stars: repo.stargazers_count ?? 0,
-        forks: repo.forks_count ?? 0,
-        lastCommit: repo.pushed_at ?? null
-      },
-      latestRelease: {
-        tag: release.tag_name ?? null,
-        name: release.name ?? null,
-        publishedAt: release.published_at ?? null,
-        url: release.html_url ?? null
-      },
-      activity: { lastChecked: new Date().toISOString() },
-      automation: { sync: true },
-      discovery: { method: "github-maintained-fork", confidence: 100 },
-      verified: false,
-      featured: false
-    };
-
-    const body =
-      `\nAutomatically discovered as an actively maintained fork of **${parent.name}** (${parent.repository}). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than ${discoveryActivityDays} days, and the fork has at least one published non-draft GitHub release.\n`;
-
-    await fs.writeFile(target, matter.stringify(body, project), "utf8");
-    known.add(repo.full_name.toLowerCase());
-    known.add(`id:${repo.id}`);
-    forkPublished++;
-
-    console.log(
-      `auto-published maintained fork ${repo.full_name} of ${parent.repository} (${forkStatus.aheadBy} commits ahead; release ${release.tag_name ?? release.name ?? "published"})`
-    );
+try {
+  await discover();
+} catch (error) {
+  if (error instanceof DiscoveryBudgetStop) {
+    stoppedForRateLimit = true;
+    console.warn(`::warning::${error.message}`);
+  } else {
+    throw error;
   }
 }
 
 console.log(
-  `Discovery complete: ${published} projects auto-published, ${forkPublished} maintained forks auto-published, ${queued} queued for review.`
+  `Discovery complete: ${published} projects auto-published, ${forkPublished} maintained forks auto-published, ${queued} queued for review, ${requestCount} GitHub API requests used${stoppedForRateLimit ? " (stopped early to protect rate limit)" : ""}.`
 );
