@@ -126,6 +126,107 @@ function latestPublishedRelease(releases) {
   return releases.find((release) => !release.draft && release.published_at) ?? null;
 }
 
+function latestStableRelease(releases) {
+  if (!Array.isArray(releases)) return null;
+  return releases.find(
+    (release) => !release.draft && !release.prerelease && release.published_at
+  ) ?? null;
+}
+
+function hasHardUnreadySignal(text) {
+  return /\b(abandoned|deprecated|unmaintained|not\s+working|doesn['’]?t\s+work|does\s+not\s+work|currently\s+broken|unusable)\b/i.test(
+    text ?? ""
+  );
+}
+
+function hasSoftWipSignal(text) {
+  return /\b(work\s+in\s+progress|wip|unfinished|incomplete|prototype|proof\s+of\s+concept|experimental|early\s+development|pre[- ]alpha)\b/i.test(
+    text ?? ""
+  );
+}
+
+function evaluateMaturity(repo, readmeText, releases) {
+  const description = repo?.description ?? "";
+  const readmeLead = (readmeText ?? "").slice(0, 5000);
+  const hardUnready =
+    hasHardUnreadySignal(description) || hasHardUnreadySignal(readmeLead);
+  const softWip =
+    hasSoftWipSignal(description) || hasSoftWipSignal(readmeLead);
+  const stableRelease = latestStableRelease(releases);
+  const publishedRelease = latestPublishedRelease(releases);
+  const recent = isRecent(repo?.pushed_at);
+
+  if (hardUnready) {
+    return {
+      state: "rejected",
+      publishEligible: false,
+      queueEligible: false,
+      stableRelease,
+      publishedRelease,
+      reasons: ["repository explicitly describes itself as abandoned, broken, deprecated, or unusable"]
+    };
+  }
+
+  if (stableRelease && !softWip) {
+    return {
+      state: recent ? "released-active" : "released-legacy",
+      publishEligible: true,
+      queueEligible: true,
+      stableRelease,
+      publishedRelease,
+      reasons: [
+        "published non-prerelease GitHub release present",
+        recent ? "repository has recent activity" : "released software retained even without recent activity"
+      ]
+    };
+  }
+
+  if (stableRelease && softWip) {
+    return {
+      state: "released-wip",
+      publishEligible: false,
+      queueEligible: true,
+      stableRelease,
+      publishedRelease,
+      reasons: ["stable release exists, but repository text still identifies the project as unfinished or experimental"]
+    };
+  }
+
+  if (publishedRelease && recent) {
+    return {
+      state: "prerelease-only",
+      publishEligible: false,
+      queueEligible: true,
+      stableRelease: null,
+      publishedRelease,
+      reasons: ["only prerelease/non-stable releases found", "repository has recent activity"]
+    };
+  }
+
+  if (recent) {
+    return {
+      state: softWip ? "active-wip" : "active-unreleased",
+      publishEligible: false,
+      queueEligible: true,
+      stableRelease: null,
+      publishedRelease,
+      reasons: [
+        softWip ? "repository identifies itself as unfinished or experimental" : "no stable release found",
+        "repository has recent activity"
+      ]
+    };
+  }
+
+  return {
+    state: "stale-unreleased",
+    publishEligible: false,
+    queueEligible: false,
+    stableRelease: null,
+    publishedRelease,
+    reasons: ["no stable release and no activity inside the configured activity window"]
+  };
+}
+
 function releaseHasPs2Signal(release) {
   if (!release) return false;
 
@@ -290,11 +391,13 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     readmeText = Buffer.from(readme.content.replace(/\n/g, ""), "base64").toString("utf8");
   }
 
-  const release = latestPublishedRelease(releases);
+  const maturity = evaluateMaturity(repo, readmeText, releases);
+  const release = maturity.stableRelease ?? maturity.publishedRelease;
   const rootNames = Array.isArray(root) ? root.map((item) => item.name.toLowerCase()) : [];
-  const forkStatus = repo.fork ? await verifyMaintainedFork(repo, release) : null;
+  const forkStatus = repo.fork ? await verifyMaintainedFork(repo, maturity.stableRelease) : null;
 
-  // Forks are intentionally stricter: they must be independently maintained and released.
+  // Forks are intentionally stricter: they must be independently maintained and have
+  // a published non-prerelease release before they can enter discovery.
   if (repo.fork && !forkStatus) return;
 
   const { score, evidence } = scoreRepository({
@@ -306,7 +409,7 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     forkStatus
   });
 
-  if (score < 70) return;
+  if (score < 70 || (!maturity.publishEligible && !maturity.queueEligible)) return;
 
   if (explicitRepositorySignal(repo) && ownerSeeds.size < maxOwnerExpansions) {
     ownerSeeds.set(repo.owner.login, repo.owner.type ?? "User");
@@ -321,6 +424,12 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     score,
     evidence,
     origin,
+    maturity: {
+      state: maturity.state,
+      publishEligible: maturity.publishEligible,
+      queueEligible: maturity.queueEligible,
+      reasons: maturity.reasons
+    },
     fork: repo.fork
       ? {
           parent: forkStatus.parent,
@@ -331,7 +440,7 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     discoveredAt: new Date().toISOString()
   };
 
-  if (score >= 95) {
+  if (score >= 95 && maturity.publishEligible) {
     const target = new URL(`${slug}.md`, projectsDir);
     if (await fileExists(target)) return;
 
@@ -400,11 +509,11 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
       published++;
       console.log(`auto-published ${repo.full_name} (${score})`);
     }
-  } else {
+  } else if (maturity.queueEligible) {
     const target = new URL(`${slug}.json`, pendingDir);
     await fs.writeFile(target, JSON.stringify(record, null, 2) + "\n", "utf8");
     queued++;
-    console.log(`queued ${repo.full_name} (${score})`);
+    console.log(`queued ${repo.full_name} (${score}; ${maturity.state})`);
   }
 }
 
@@ -464,7 +573,7 @@ for (const parent of knownProjects) {
     if (!repo) continue;
 
     const releases = await github(`/repos/${fork.full_name}/releases?per_page=10`);
-    const release = latestPublishedRelease(releases);
+    const release = latestStableRelease(releases);
     const forkStatus = await verifyMaintainedFork(repo, release);
     if (!forkStatus) continue;
 
