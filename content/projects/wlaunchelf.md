@@ -34,7 +34,7 @@ latestRelease:
   publishedAt: '2019-01-07T17:38:53Z'
   url: 'https://github.com/ps2homebrew/wLaunchELF/releases/tag/190107'
 activity:
-  lastChecked: '2026-09-29T00:04:37.957Z'
+  lastChecked: '2026-09-29T00:27:15.938Z'
 automation:
   sync: true
 discovery:

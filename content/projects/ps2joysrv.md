@@ -19,14 +19,14 @@ repository:
   defaultBranch: master
   stars: 4
   forks: 0
-  lastCommit: '2022-10-22T23:57:06Z'
+  lastCommit: '2022-10-22T19:18:51Z'
 latestRelease:
   tag: v0.0.1
   name: v0.0.1
   publishedAt: '2022-10-22T23:53:19Z'
   url: 'https://github.com/adlerosn/ps2joysrv/releases/tag/v0.0.1'
 activity:
-  lastChecked: '2026-09-29T00:04:52.034Z'
+  lastChecked: '2026-09-29T00:27:12.567Z'
 automation:
   sync: true
 discovery:
@@ -35,5 +35,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

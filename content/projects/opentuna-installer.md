@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2021-11-29T18:49:31Z'
   url: 'https://github.com/ps2homebrew/opentuna-installer/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:30.048Z'
+  lastChecked: '2026-09-29T00:27:06.774Z'
 automation:
   sync: true
 discovery:

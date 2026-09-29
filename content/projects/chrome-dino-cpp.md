@@ -28,7 +28,7 @@ latestRelease:
   publishedAt: '2026-05-11T11:52:52Z'
   url: 'https://github.com/DanielLMcGuire/chrome-dino-cpp/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:43.840Z'
+  lastChecked: '2026-09-29T00:27:00.704Z'
 automation:
   sync: true
 discovery:
@@ -37,5 +37,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

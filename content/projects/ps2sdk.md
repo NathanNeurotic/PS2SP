@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: null
   url: null
 activity:
-  lastChecked: '2026-09-29T00:04:35.580Z'
+  lastChecked: '2026-09-29T00:27:13.650Z'
 automation:
   sync: true
 discovery:

@@ -31,7 +31,7 @@ latestRelease:
   publishedAt: '2021-11-03T20:43:53Z'
   url: 'https://github.com/ps2dev/ps2client/releases/tag/v1.3.0'
 activity:
-  lastChecked: '2026-09-29T00:04:32.845Z'
+  lastChecked: '2026-09-29T00:27:10.402Z'
 automation:
   sync: true
 discovery:

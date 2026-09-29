@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2025-01-01T15:13:50Z'
   url: 'https://github.com/israpps/FreeMcBoot-Installer/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:26.644Z'
+  lastChecked: '2026-09-29T00:27:02.184Z'
 automation:
   sync: true
 discovery:

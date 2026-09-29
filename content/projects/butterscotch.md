@@ -19,14 +19,14 @@ repository:
   defaultBranch: main
   stars: 376
   forks: 108
-  lastCommit: '2026-09-28T23:51:35Z'
+  lastCommit: '2026-09-28T23:51:31Z'
 latestRelease:
   tag: null
   name: null
   publishedAt: null
   url: null
 activity:
-  lastChecked: '2026-09-29T00:04:41.606Z'
+  lastChecked: '2026-09-29T00:27:00.436Z'
 automation:
   sync: true
 discovery:
@@ -35,5 +35,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

@@ -21,14 +21,15 @@ repository:
   defaultBranch: main
   stars: 1
   forks: 0
-  lastCommit: '2026-09-10T01:48:33Z'
+  lastCommit: '2026-08-23T22:54:07Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: v0.6
+  name: PStore2 v0.6
+  publishedAt: '2026-08-23T21:18:53Z'
+  url: >-
+    https://github.com/davifernandobastosdeassiss-coder/DaviDevPS/releases/tag/v0.6
 activity:
-  lastChecked: '2026-09-29T00:04:44.086Z'
+  lastChecked: '2026-09-29T00:27:00.988Z'
 automation:
   sync: true
 discovery:
@@ -37,5 +38,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

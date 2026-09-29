@@ -26,7 +26,7 @@ latestRelease:
   publishedAt: '2026-01-14T03:23:14Z'
   url: 'https://github.com/israpps/Funtuna-Fork/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:46.762Z'
+  lastChecked: '2026-09-29T00:27:02.458Z'
 automation:
   sync: true
 discovery:
@@ -35,5 +35,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

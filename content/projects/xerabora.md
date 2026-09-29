@@ -23,14 +23,14 @@ repository:
   defaultBranch: main
   stars: 28
   forks: 3
-  lastCommit: '2026-09-28T17:45:13Z'
+  lastCommit: '2026-09-28T17:44:41Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: v0.1.0-alpha.12
+  name: v0.1.0-alpha.12
+  publishedAt: '2026-09-26T15:50:07Z'
+  url: 'https://github.com/hacan359/xerabora/releases/tag/v0.1.0-alpha.12'
 activity:
-  lastChecked: '2026-09-29T00:04:42.097Z'
+  lastChecked: '2026-09-29T00:27:16.548Z'
 automation:
   sync: true
 discovery:
@@ -39,5 +39,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

@@ -27,7 +27,7 @@ latestRelease:
   publishedAt: '2024-03-17T18:46:06Z'
   url: 'https://github.com/ps2dev/ps2gdb/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:33.655Z'
+  lastChecked: '2026-09-29T00:27:11.204Z'
 automation:
   sync: true
 discovery:

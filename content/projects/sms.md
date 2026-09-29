@@ -31,7 +31,7 @@ latestRelease:
   publishedAt: '2021-06-14T15:57:48Z'
   url: 'https://github.com/ps2homebrew/SMS/releases/tag/2.9rev4'
 activity:
-  lastChecked: '2026-09-29T00:04:36.944Z'
+  lastChecked: '2026-09-29T00:27:14.840Z'
 automation:
   sync: true
 discovery:

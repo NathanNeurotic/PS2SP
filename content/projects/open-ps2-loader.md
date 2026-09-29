@@ -33,7 +33,7 @@ latestRelease:
   publishedAt: '2021-09-09T19:08:06Z'
   url: 'https://github.com/ps2homebrew/Open-PS2-Loader/releases/tag/v1.1.0'
 activity:
-  lastChecked: '2026-09-29T00:04:29.795Z'
+  lastChecked: '2026-09-29T00:27:06.529Z'
 automation:
   sync: true
 discovery:

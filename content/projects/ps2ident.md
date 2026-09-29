@@ -31,7 +31,7 @@ latestRelease:
   publishedAt: '2021-04-01T13:28:02Z'
   url: 'https://github.com/ps2homebrew/PS2Ident/releases/tag/stable'
 activity:
-  lastChecked: '2026-09-29T00:04:34.600Z'
+  lastChecked: '2026-09-29T00:27:11.951Z'
 automation:
   sync: true
 discovery:

@@ -19,14 +19,14 @@ repository:
   defaultBranch: master
   stars: 1
   forks: 0
-  lastCommit: '2026-08-13T21:27:44Z'
+  lastCommit: '2026-08-13T21:22:45Z'
 latestRelease:
   tag: rev.6c
   name: Rev.6c
   publishedAt: '2026-08-13T21:31:16Z'
   url: 'https://github.com/karasq/PS2InfoGB/releases/tag/rev.6c'
 activity:
-  lastChecked: '2026-09-29T00:04:44.319Z'
+  lastChecked: '2026-09-29T00:27:12.222Z'
 automation:
   sync: true
 discovery:
@@ -35,5 +35,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

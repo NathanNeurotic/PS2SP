@@ -32,7 +32,7 @@ latestRelease:
   url: >-
     https://github.com/ps2homebrew/wOPL/releases/tag/v1.1-351-20260514-082037-786-8742426
 activity:
-  lastChecked: '2026-09-29T00:04:38.246Z'
+  lastChecked: '2026-09-29T00:27:16.252Z'
 automation:
   sync: true
 discovery:

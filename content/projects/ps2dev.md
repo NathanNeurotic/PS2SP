@@ -31,7 +31,7 @@ latestRelease:
   publishedAt: '2026-05-17T09:40:02Z'
   url: 'https://github.com/ps2dev/ps2dev/releases/tag/v2.0.0'
 activity:
-  lastChecked: '2026-09-29T00:04:33.098Z'
+  lastChecked: '2026-09-29T00:27:10.684Z'
 automation:
   sync: true
 discovery:

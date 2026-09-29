@@ -1,0 +1,24 @@
+{
+  "repository": "znxee/mc3boot",
+  "repositoryId": "1369172854",
+  "url": "https://github.com/znxee/mc3boot",
+  "description": "Mod loader for Midnight Club 3: DUB Edition (PS2). Write mods in C++, drop them next to the game, name them in an .ini - no patched ISO, no cheat codes.",
+  "score": 80,
+  "evidence": [
+    "repository description explicitly identifies PS2",
+    "README contains PS2 development/toolchain evidence",
+    "repository pushed within the last 180 days"
+  ],
+  "origin": "github-search",
+  "maturity": {
+    "state": "active-unreleased",
+    "publishEligible": false,
+    "queueEligible": true,
+    "reasons": [
+      "no stable release found",
+      "repository has recent activity"
+    ]
+  },
+  "fork": null,
+  "discoveredAt": "2026-09-29T00:27:52.695Z"
+}

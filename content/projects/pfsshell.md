@@ -33,7 +33,7 @@ latestRelease:
   publishedAt: '2020-08-20T16:16:14Z'
   url: 'https://github.com/ps2homebrew/pfsshell/releases/tag/v1.1.1'
 activity:
-  lastChecked: '2026-09-29T00:04:30.414Z'
+  lastChecked: '2026-09-29T00:27:07.638Z'
 automation:
   sync: true
 discovery:

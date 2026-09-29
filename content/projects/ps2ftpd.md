@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2022-02-25T17:18:00Z'
   url: 'https://github.com/ps2homebrew/ps2ftpd/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:33.386Z'
+  lastChecked: '2026-09-29T00:27:10.917Z'
 automation:
   sync: true
 discovery:

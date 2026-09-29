@@ -28,7 +28,7 @@ latestRelease:
   publishedAt: '2026-09-20T15:25:08Z'
   url: 'https://github.com/PunishedSnake/fhdb-bootstrap-manager/releases/tag/v0.5.0'
 activity:
-  lastChecked: '2026-09-29T00:04:48.566Z'
+  lastChecked: '2026-09-29T00:27:01.624Z'
 automation:
   sync: true
 discovery:
@@ -37,5 +37,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

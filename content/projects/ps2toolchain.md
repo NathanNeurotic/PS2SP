@@ -29,7 +29,7 @@ latestRelease:
   publishedAt: '2018-10-19T14:34:49Z'
   url: 'https://github.com/ps2dev/ps2toolchain/releases/tag/2018-10-19'
 activity:
-  lastChecked: '2026-09-29T00:04:35.861Z'
+  lastChecked: '2026-09-29T00:27:13.927Z'
 automation:
   sync: true
 discovery:

@@ -32,7 +32,7 @@ latestRelease:
   publishedAt: '2024-02-12T08:30:25Z'
   url: 'https://github.com/h4570/tyra/releases/tag/v2.7.3'
 activity:
-  lastChecked: '2026-09-29T00:04:37.430Z'
+  lastChecked: '2026-09-29T00:27:15.340Z'
 automation:
   sync: true
 discovery:

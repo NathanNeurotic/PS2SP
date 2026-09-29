@@ -31,7 +31,7 @@ latestRelease:
   publishedAt: '2023-10-05T16:29:09Z'
   url: 'https://github.com/israpps/PlayStation2-Basic-BootLoader/releases/tag/v1.2.0'
 activity:
-  lastChecked: '2026-09-29T00:04:32.541Z'
+  lastChecked: '2026-09-29T00:27:10.134Z'
 automation:
   sync: true
 discovery:

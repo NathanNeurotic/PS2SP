@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2020-07-27T09:17:45Z'
   url: 'https://github.com/ps2homebrew/hdl-dump/releases/tag/v47'
 activity:
-  lastChecked: '2026-09-29T00:04:28.017Z'
+  lastChecked: '2026-09-29T00:27:03.794Z'
 automation:
   sync: true
 discovery:

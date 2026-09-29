@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2024-04-02T11:16:17Z'
   url: 'https://github.com/ps2dev/ps2link/releases/tag/RenameMe'
 activity:
-  lastChecked: '2026-09-29T00:04:34.850Z'
+  lastChecked: '2026-09-29T00:27:12.819Z'
 automation:
   sync: true
 discovery:

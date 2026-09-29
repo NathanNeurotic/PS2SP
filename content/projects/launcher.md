@@ -35,7 +35,7 @@ latestRelease:
   publishedAt: '2026-09-28T01:09:02Z'
   url: 'https://github.com/NathanNeurotic/launcHER/releases/tag/latest'
 activity:
-  lastChecked: '2026-09-29T00:04:28.545Z'
+  lastChecked: '2026-09-29T00:27:04.651Z'
 automation:
   sync: true
 discovery:

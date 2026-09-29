@@ -21,14 +21,14 @@ repository:
   defaultBranch: main
   stars: 2
   forks: 1
-  lastCommit: '2026-05-10T03:47:58Z'
+  lastCommit: '2026-05-10T03:47:55Z'
 latestRelease:
   tag: v0.2.1-alpha
   name: v0.2.1-alpha
   publishedAt: '2026-05-10T02:36:29Z'
   url: 'https://github.com/binkynz/ps2-usbhdl/releases/tag/v0.2.1-alpha'
 activity:
-  lastChecked: '2026-09-29T00:04:49.814Z'
+  lastChecked: '2026-09-29T00:27:09.872Z'
 automation:
   sync: true
 discovery:
@@ -37,5 +37,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

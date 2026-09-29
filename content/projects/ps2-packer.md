@@ -29,7 +29,7 @@ latestRelease:
   publishedAt: '2018-08-23T15:30:49Z'
   url: 'https://github.com/ps2dev/ps2-packer/releases/tag/1.1.0'
 activity:
-  lastChecked: '2026-09-29T00:04:32.272Z'
+  lastChecked: '2026-09-29T00:27:09.228Z'
 automation:
   sync: true
 discovery:

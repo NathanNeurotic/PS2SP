@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2026-09-21T19:57:12Z'
   url: 'https://github.com/ReyFxck/SNESticleRevive/releases/tag/1.1.0'
 activity:
-  lastChecked: '2026-09-29T00:04:37.195Z'
+  lastChecked: '2026-09-29T00:27:15.092Z'
 automation:
   sync: true
 discovery:

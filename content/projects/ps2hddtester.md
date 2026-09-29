@@ -30,7 +30,7 @@ latestRelease:
   publishedAt: '2023-07-18T07:24:27Z'
   url: 'https://github.com/ps2homebrew/PS2HDDTester/releases/tag/v1.1'
 activity:
-  lastChecked: '2026-09-29T00:04:34.247Z'
+  lastChecked: '2026-09-29T00:27:11.662Z'
 automation:
   sync: true
 discovery:

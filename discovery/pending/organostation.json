@@ -1,0 +1,24 @@
+{
+  "repository": "Luife-correia/OrganoStation",
+  "repositoryId": "1243634760",
+  "url": "https://github.com/Luife-correia/OrganoStation",
+  "description": "OrganoStation é uma aplicação web em Angular para catalogar e explorar jogos clássicos do PlayStation 2. Inspirado no projeto Organo da Alura, o projeto evoluiu para uma experiência autoral com busca, favoritos, organização por gêneros e identidade visual inspirada no universo PlayStation.",
+  "score": 80,
+  "evidence": [
+    "repository description explicitly identifies PS2",
+    "README explicitly mentions PlayStation 2",
+    "repository pushed within the last 180 days"
+  ],
+  "origin": "github-search",
+  "maturity": {
+    "state": "active-unreleased",
+    "publishEligible": false,
+    "queueEligible": true,
+    "reasons": [
+      "no stable release found",
+      "repository has recent activity"
+    ]
+  },
+  "fork": null,
+  "discoveredAt": "2026-09-29T00:28:51.506Z"
+}

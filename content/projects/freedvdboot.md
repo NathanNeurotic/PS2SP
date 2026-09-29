@@ -29,7 +29,7 @@ latestRelease:
   publishedAt: '2022-02-02T08:42:14Z'
   url: 'https://github.com/ps2homebrew/FreeDVDBoot/releases/tag/1.0'
 activity:
-  lastChecked: '2026-09-29T00:04:26.280Z'
+  lastChecked: '2026-09-29T00:27:01.903Z'
 automation:
   sync: true
 discovery:

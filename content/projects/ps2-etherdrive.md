@@ -29,7 +29,7 @@ latestRelease:
   publishedAt: null
   url: null
 activity:
-  lastChecked: '2026-09-29T00:04:45.425Z'
+  lastChecked: '2026-09-29T00:27:09.005Z'
 automation:
   sync: true
 discovery:
@@ -38,5 +38,4 @@ discovery:
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.
