@@ -1,21 +1,40 @@
 ---
-name: "OPLattice"
-slug: "oplattice"
-summary: "PlayStation 2-related repository maintained by NathanNeurotic: OPLattice."
-categories: ["loaders"]
-tags: ["nathanneurotic", "curated-owner"]
+name: OPLattice
+slug: oplattice
+summary: >-
+  A custom Open PS2 Loader build: the SHELF sidebar UI, nine renderer patches,
+  four grid themes, an art pipeline, and a WYSIWYG theme previewer.
+categories:
+  - loaders
+tags:
+  - nathanneurotic
+  - curated-owner
 features: []
 authors: []
-license: null
+license: GPL-3.0
 homepage: null
 source:
   provider: github
-  repository: "NathanNeurotic/OPLattice"
-repository: {}
-latestRelease: {}
-activity: {}
+  repository: NathanNeurotic/OPLattice
+  repositoryId: '1369835391'
+repository:
+  archived: false
+  defaultBranch: main
+  stars: 0
+  forks: 0
+  lastCommit: '2026-09-07T00:03:08Z'
+latestRelease:
+  tag: null
+  name: null
+  publishedAt: null
+  url: null
+activity:
+  lastSynchronized: '2026-09-29T02:36:53.856Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"9d8ebc6e34f4748a93a4dd6ee4a623193ed8e42d519219bda737f523ebeb3af9"
+    releasesEtag: '"92d1da06bc39cbed888d1815dbc9a62e8267a318054504c33ab96eb3bf896792"'
 discovery:
   method: curated-owner
   confidence: 100

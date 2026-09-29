@@ -30,13 +30,16 @@ latestRelease:
   url: 'https://github.com/hkmodd/ps2-recomp-Agent-SKILL/releases/tag/v0.4.3'
 activity:
   lastChecked: '2026-09-29T00:29:14.395Z'
+  lastSynchronized: '2026-09-29T02:37:04.170Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"f3a3c70ba3ff36b13f7c3ea25f9c84cb42a5c6b2ebf78b77eaaf14bcaff64c9f"
+    releasesEtag: W/"9e0013542304d6667d219d35722ee237aa854fc1c93e28ac85e5bb9ee66e83f9"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

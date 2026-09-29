@@ -24,7 +24,7 @@ repository:
   defaultBranch: master
   stars: 67
   forks: 10
-  lastCommit: '2024-09-06T10:25:17Z'
+  lastCommit: '2024-09-06T10:25:21Z'
 latestRelease:
   tag: stable
   name: PS2Ident v0.850
@@ -32,8 +32,12 @@ latestRelease:
   url: 'https://github.com/ps2homebrew/PS2Ident/releases/tag/stable'
 activity:
   lastChecked: '2026-09-29T00:27:11.951Z'
+  lastSynchronized: '2026-09-29T02:37:12.156Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"078e68204afe9ff40bad5943a5046fccf740a21ba1e84928ddbaf589b4b2611b"
+    releasesEtag: W/"81fcb0be94eac676077f4e8efb609045fc6dd438a7439a36a0a6065690b84c3e"
 discovery:
   method: curated
   confidence: 100

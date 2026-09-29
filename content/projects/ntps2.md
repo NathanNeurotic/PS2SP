@@ -29,13 +29,16 @@ latestRelease:
   url: 'https://github.com/ShyavanS/NTPS2/releases/tag/v1.2.1'
 activity:
   lastChecked: '2026-09-29T00:27:35.011Z'
+  lastSynchronized: '2026-09-29T02:36:44.252Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"3bea83cb04b47ac4d80e314ef2f3e76d145b9f38c671919a905b249b3a441163"
+    releasesEtag: W/"fee0ae62c4fd47400d6baebb5d04cf72e058797eac0de2dcd34e76b0dc85d33b"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

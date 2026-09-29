@@ -29,13 +29,16 @@ latestRelease:
   url: 'https://github.com/jonnypaes/ps2cd/releases/tag/v0.1.1'
 activity:
   lastChecked: '2026-09-29T00:27:33.671Z'
+  lastSynchronized: '2026-09-29T02:37:08.591Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"1fcba3f0ee3b24d857a6f0915e85e0d52bde0ffad883a44e032bcce8857c001a"
+    releasesEtag: W/"6d93efd635a479ec508b7f8d5f3e4634f1a48781be448ba2a6e41c56ae30cb80"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

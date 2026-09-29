@@ -21,7 +21,7 @@ repository:
   defaultBranch: main
   stars: 1
   forks: 0
-  lastCommit: '2026-08-23T22:54:07Z'
+  lastCommit: '2026-09-10T01:48:33Z'
 latestRelease:
   tag: v0.6
   name: PStore2 v0.6
@@ -30,8 +30,12 @@ latestRelease:
     https://github.com/davifernandobastosdeassiss-coder/DaviDevPS/releases/tag/v0.6
 activity:
   lastChecked: '2026-09-29T00:27:00.988Z'
+  lastSynchronized: '2026-09-29T02:36:23.651Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"6e06240777e55308de02d64e969e7c2ede175d5d496db1a911325471dbf59265"
+    releasesEtag: W/"4e121b2d70ff49602fdc910983673ea0a6ab238d70a654e39cfaa62f0b995bf6"
 discovery:
   method: github-search
   confidence: 100

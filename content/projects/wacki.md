@@ -31,13 +31,16 @@ latestRelease:
   url: 'https://github.com/mszula/wacki/releases/tag/v1.2.4'
 activity:
   lastChecked: '2026-09-29T00:28:55.301Z'
+  lastSynchronized: '2026-09-29T02:37:30.900Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"8b43f7089d7e44d152d7e253d5f793ab9fde228391b7dcab2df4a1b36392a5f7"
+    releasesEtag: W/"c3d0dfcd28d207d5c93d80afbe08feacc0d576a77a46f0e85b61f8a312ed0dd4"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

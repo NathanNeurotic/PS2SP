@@ -30,13 +30,16 @@ latestRelease:
   url: 'https://github.com/Irfanlesnar/PS2-Launcher/releases/tag/v4.0.0'
 activity:
   lastChecked: '2026-09-29T00:29:07.917Z'
+  lastSynchronized: '2026-09-29T02:37:02.381Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"b298aa302e966dc35a2819a248c1eecaae837d61791760d60932aa1293fc56e4"
+    releasesEtag: W/"513ba172ce6b8cc8731d5e0219af79163f9029f29856820bf3d597e8cb6adf51"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

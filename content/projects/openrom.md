@@ -30,13 +30,16 @@ latestRelease:
   url: 'https://github.com/M5Devs/OpenROM/releases/tag/v3.6.1'
 activity:
   lastChecked: '2026-09-29T00:28:24.384Z'
+  lastSynchronized: '2026-09-29T02:36:47.714Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"218050732c9658231da47a235380174032875108f592fd00a5cd5137a46bfa98"
+    releasesEtag: W/"f10083f72c7d496c8b259b60b5a677b5cfb0c46614ed90ed6a97849aa8f7a282"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

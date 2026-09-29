@@ -19,7 +19,7 @@ repository:
   defaultBranch: master
   stars: 1
   forks: 0
-  lastCommit: '2026-08-13T21:22:45Z'
+  lastCommit: '2026-08-13T21:27:44Z'
 latestRelease:
   tag: rev.6c
   name: Rev.6c
@@ -27,8 +27,12 @@ latestRelease:
   url: 'https://github.com/karasq/PS2InfoGB/releases/tag/rev.6c'
 activity:
   lastChecked: '2026-09-29T00:27:12.222Z'
+  lastSynchronized: '2026-09-29T02:37:12.666Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"c5bff3de4d63e992ad313a417458030a82a3a748b7688d29a47164136e3775af"
+    releasesEtag: W/"c3d6088f602469105e8680c884193575f51ee08a3d8751d8058a47e38d90e807"
 discovery:
   method: github-search
   confidence: 100

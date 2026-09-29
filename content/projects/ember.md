@@ -27,13 +27,16 @@ latestRelease:
   url: 'https://github.com/Gageformer/Ember/releases/tag/Beta-2'
 activity:
   lastChecked: '2026-09-29T00:28:03.014Z'
+  lastSynchronized: '2026-09-29T02:36:25.479Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"dbb1056602306ea08f8d3b052cb3d1f1372b572c29d6190ccc07b8b070987cb1"
+    releasesEtag: W/"6aa2ebe4d41f1f337b2d71449f9d1bb38d1546631342913163943431cd641aa5"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

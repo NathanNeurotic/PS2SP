@@ -30,8 +30,12 @@ latestRelease:
   url: null
 activity:
   lastChecked: '2026-09-29T00:27:09.005Z'
+  lastSynchronized: '2026-09-29T02:37:00.837Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"23270573fa82c8e8ed9dca02619068e26d3b47c229856b5b97acbc8b07903eab"
+    releasesEtag: '"92d1da06bc39cbed888d1815dbc9a62e8267a318054504c33ab96eb3bf896792"'
 discovery:
   method: github-search
   confidence: 100

@@ -36,13 +36,17 @@ latestRelease:
   url: 'https://github.com/danielnuld/Open-PS2-Loader/releases/tag/ps5-ui-v1'
 activity:
   lastChecked: '2026-09-29T00:31:29.234Z'
+  lastSynchronized: '2026-09-29T02:36:45.105Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"3ea0181cac70476e5ce32747aeaea609e10d2fdf7f06b30a5bebe07b712d47f4"
+    releasesEtag: W/"c8f94f486151f8b39914a544c04229522b4b43b1b252cfd804aeb3b2234ff588"
 discovery:
   method: github-maintained-fork
   confidence: 100
 verified: false
 featured: false
+hidden: false
 ---
-
 Automatically discovered as an actively maintained fork of **Open PS2 Loader** (ps2homebrew/Open-PS2-Loader). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than 180 days, and the fork has at least one published non-draft GitHub release.

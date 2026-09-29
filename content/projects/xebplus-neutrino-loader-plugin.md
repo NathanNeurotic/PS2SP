@@ -28,13 +28,16 @@ latestRelease:
     https://github.com/sync-on-luma/xebplus-neutrino-loader-plugin/releases/tag/2.9.7
 activity:
   lastChecked: '2026-09-29T00:27:31.245Z'
+  lastSynchronized: '2026-09-29T02:37:36.843Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"a58e436e348f21d9b1f3d9f72b969d62a6d48a664c244a95dca1598750a34799"
+    releasesEtag: W/"e66492256946a70f9f0089d6aa24d3c26a71d182199c822269d428035f8ec119"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

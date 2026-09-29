@@ -1,21 +1,38 @@
 ---
-name: "Open-PS2-Loader-lang"
-slug: "open-ps2-loader-lang"
-summary: "PlayStation 2-related repository maintained by NathanNeurotic: Open-PS2-Loader-lang."
-categories: ["preservation"]
-tags: ["nathanneurotic", "curated-owner"]
+name: Open-PS2-Loader-lang
+slug: open-ps2-loader-lang
+summary: Language files for OPL/uOPL/wOPL/OPLDB
+categories:
+  - preservation
+tags:
+  - nathanneurotic
+  - curated-owner
 features: []
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "NathanNeurotic/Open-PS2-Loader-lang"
-repository: {}
-latestRelease: {}
-activity: {}
+  repository: NathanNeurotic/Open-PS2-Loader-lang
+  repositoryId: '1180434884'
+repository:
+  archived: false
+  defaultBranch: main
+  stars: 0
+  forks: 0
+  lastCommit: '2025-10-05T19:09:48Z'
+latestRelease:
+  tag: null
+  name: null
+  publishedAt: null
+  url: null
+activity:
+  lastSynchronized: '2026-09-29T02:36:46.273Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"a1077d5069ccfaaefc3500701d507a9fcc03abcc0d4476b69a0c18fd102ffd37"
+    releasesEtag: '"92d1da06bc39cbed888d1815dbc9a62e8267a318054504c33ab96eb3bf896792"'
 discovery:
   method: curated-owner
   confidence: 100

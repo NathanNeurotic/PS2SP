@@ -39,13 +39,17 @@ latestRelease:
   url: 'https://github.com/mutter2009/wLaunchELF_R3Z/releases/tag/latest'
 activity:
   lastChecked: '2026-09-29T00:33:05.122Z'
+  lastSynchronized: '2026-09-29T02:37:33.548Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"8932d2795642cb1d496ed0407b194fc2a65ff33f42b9127de1693cae44fa450f"
+    releasesEtag: W/"9e6ab47fc780741685294c5a12f46a8e877b92f10b4e90a553d39f79e26fe89b"
 discovery:
   method: github-maintained-fork
   confidence: 100
 verified: false
 featured: false
+hidden: true
 ---
-
 Automatically discovered as an actively maintained fork of **wLaunchELF R3Z** (saildot4k/wLaunchELF_R3Z). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than 180 days, and the fork has at least one published non-draft GitHub release.

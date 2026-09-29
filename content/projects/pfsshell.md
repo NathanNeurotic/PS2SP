@@ -26,7 +26,7 @@ repository:
   defaultBranch: master
   stars: 129
   forks: 30
-  lastCommit: '2026-04-10T08:29:41Z'
+  lastCommit: '2026-06-03T23:49:53Z'
 latestRelease:
   tag: v1.1.1
   name: PFS Shell v1.1.1
@@ -34,8 +34,12 @@ latestRelease:
   url: 'https://github.com/ps2homebrew/pfsshell/releases/tag/v1.1.1'
 activity:
   lastChecked: '2026-09-29T00:27:07.638Z'
+  lastSynchronized: '2026-09-29T02:36:55.957Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"0ed791c7c68157ed8110dad195adbfa3003340058d1ef28b9f0493c6458836be"
+    releasesEtag: W/"79d1add485b13cef29627ffedc1c1220be3f7a3c6fba6191877b6566918ae86a"
 discovery:
   method: curated
   confidence: 100

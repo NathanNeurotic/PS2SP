@@ -29,13 +29,16 @@ latestRelease:
   url: 'https://github.com/blazium-games/blazium-toolchain/releases/tag/v0.1.8'
 activity:
   lastChecked: '2026-09-29T00:27:46.918Z'
+  lastSynchronized: '2026-09-29T02:36:21.362Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"eecf0d62f004828ddfca3cc5c7eecec578e60c596729b3f7bebc546c87a65dce"
+    releasesEtag: W/"6e47583fa0cc95280759ad823fbbe711d0b8dd6156b0e0548ffe24ef352b7e89"
 discovery:
   method: github-search
   confidence: 100
 verified: false
 featured: false
 ---
-
 Automatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.

@@ -31,13 +31,17 @@ latestRelease:
   url: 'https://github.com/L10N37/Fceumm-PS2-SMB/releases/tag/v0.3.4-smb1'
 activity:
   lastChecked: '2026-09-29T00:30:39.763Z'
+  lastSynchronized: '2026-09-29T02:36:26.447Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"fb015740cf439b38e363c9153d5ffbdb10d83c5e588893e5752e7d2eb161393f"
+    releasesEtag: W/"84c3d3c05c7b5ac29ddc107604bd331ea68323a988d6650356da4e0b4a9d9360"
 discovery:
   method: github-maintained-fork
   confidence: 100
 verified: false
 featured: false
+hidden: false
 ---
-
 Automatically discovered as an actively maintained fork of **FCEUmm-PS2** (ps2homebrew/Fceumm-PS2). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than 180 days, and the fork has at least one published non-draft GitHub release.

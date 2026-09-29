@@ -31,13 +31,17 @@ latestRelease:
     https://github.com/oMrRexD/xerabora-android/releases/tag/android-0.1.0-alpha.12-r80
 activity:
   lastChecked: '2026-09-29T00:33:24.960Z'
+  lastSynchronized: '2026-09-29T02:37:37.352Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"e2359b5656a59203c8072384fba310507680be389e814404233e19aa33426474"
+    releasesEtag: W/"a66ee9dbbf9911a22750f9a771a2c4b0af4c7aad39d591bccddfaee94a29bac0"
 discovery:
   method: github-maintained-fork
   confidence: 100
 verified: false
 featured: false
+hidden: false
 ---
-
 Automatically discovered as an actively maintained fork of **xerabora** (hacan359/xerabora). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than 180 days, and the fork has at least one published non-draft GitHub release.

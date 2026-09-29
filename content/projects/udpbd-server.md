@@ -1,21 +1,39 @@
 ---
-name: "udpbd-server"
-slug: "udpbd-server"
-summary: "PlayStation 2-related repository maintained by NathanNeurotic: udpbd-server."
-categories: ["networking","host-tools"]
-tags: ["nathanneurotic", "curated-owner"]
+name: udpbd-server
+slug: udpbd-server
+summary: My version of udpbd-server for raspberry pi
+categories:
+  - networking
+  - host-tools
+tags:
+  - nathanneurotic
+  - curated-owner
 features: []
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "NathanNeurotic/udpbd-server"
-repository: {}
-latestRelease: {}
-activity: {}
+  repository: NathanNeurotic/udpbd-server
+  repositoryId: '1358690555'
+repository:
+  archived: false
+  defaultBranch: main
+  stars: 0
+  forks: 0
+  lastCommit: '2023-09-01T10:52:22Z'
+latestRelease:
+  tag: null
+  name: null
+  publishedAt: null
+  url: null
+activity:
+  lastSynchronized: '2026-09-29T02:37:30.080Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"fcba98b31c77eeb86fbace6e07255410e1abd212a3ee04980750da25acbdc602"
+    releasesEtag: '"92d1da06bc39cbed888d1815dbc9a62e8267a318054504c33ab96eb3bf896792"'
 discovery:
   method: curated-owner
   confidence: 100

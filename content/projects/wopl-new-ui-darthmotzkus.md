@@ -36,13 +36,17 @@ latestRelease:
   url: 'https://github.com/DarthMotzkus/wOPL-new-ui/releases/tag/v1.0'
 activity:
   lastChecked: '2026-09-29T00:33:20.217Z'
+  lastSynchronized: '2026-09-29T02:37:35.962Z'
 automation:
   sync: true
+  github:
+    repoEtag: W/"ee6f22273efa5e3d3aa98927841f832d677511869ee73f0e59906bcb3851c8b0"
+    releasesEtag: W/"9036c766eac173148ae8f20307c1aaa4bbc87d6c4d28ba1d5b025b43dcad5072"
 discovery:
   method: github-maintained-fork
   confidence: 100
 verified: false
 featured: false
+hidden: true
 ---
-
 Automatically discovered as an actively maintained fork of **wOPL** (ps2homebrew/wOPL). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than 180 days, and the fork has at least one published non-draft GitHub release.
