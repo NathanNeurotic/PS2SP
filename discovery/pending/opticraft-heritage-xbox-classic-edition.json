@@ -7,20 +7,11 @@
   "evidence": [
     "README explicitly mentions PlayStation 2",
     "README contains PS2 development/toolchain evidence",
-    "native build files present",
-    "published GitHub release present",
-    "repository pushed within the last 180 days"
+    "published GitHub release present"
   ],
-  "origin": "github-search",
-  "maturity": {
-    "state": "released-active",
-    "publishEligible": true,
-    "queueEligible": true,
-    "reasons": [
-      "published non-prerelease GitHub release present",
-      "repository has recent activity"
-    ]
-  },
+  "origin": "pending-recheck",
+  "maturity": "released-active",
   "fork": null,
-  "discoveredAt": "2026-09-29T00:27:45.888Z"
+  "discoveredAt": "2026-09-29T00:27:45.888Z",
+  "checkedAt": "2026-09-29T04:54:49.800Z"
 }

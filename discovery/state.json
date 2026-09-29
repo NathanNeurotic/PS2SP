@@ -9,13 +9,13 @@
   },
   "trustedOwnersSeeded": true,
   "lastRun": {
-    "startedAt": "2026-09-29T02:56:45.068Z",
-    "finishedAt": "2026-09-29T02:58:28.225Z",
+    "startedAt": "2026-09-29T04:54:49.800Z",
+    "finishedAt": "2026-09-29T04:56:41.755Z",
     "requests": 350,
     "searchRequests": 12,
-    "published": 90,
-    "queued": 17,
-    "ignored": 65,
+    "published": 9,
+    "queued": 8,
+    "ignored": 152,
     "rechecked": 20,
     "stoppedForRateLimit": true
   }

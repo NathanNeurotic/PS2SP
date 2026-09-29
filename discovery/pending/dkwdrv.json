@@ -3,24 +3,16 @@
   "repositoryId": "786537597",
   "url": "https://github.com/DKWDRV/DKWDRV",
   "description": null,
-  "score": 85,
+  "score": 90,
   "evidence": [
     "README explicitly mentions PlayStation 2",
     "README contains PS2 development/toolchain evidence",
     "published GitHub release present",
-    "release contains an ELF",
-    "repository pushed within the last 180 days"
+    "release contains a PS2-style ELF asset"
   ],
-  "origin": "github-search",
-  "maturity": {
-    "state": "released-active",
-    "publishEligible": true,
-    "queueEligible": true,
-    "reasons": [
-      "published non-prerelease GitHub release present",
-      "repository has recent activity"
-    ]
-  },
+  "origin": "pending-recheck",
+  "maturity": "released-active",
   "fork": null,
-  "discoveredAt": "2026-09-29T00:27:48.807Z"
+  "discoveredAt": "2026-09-29T00:27:48.807Z",
+  "checkedAt": "2026-09-29T04:54:49.800Z"
 }
