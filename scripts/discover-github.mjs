@@ -22,6 +22,7 @@ const discoveryActivityDays = Number.parseInt(process.env.DISCOVERY_ACTIVITY_DAY
 const activityCutoff = Date.now() - discoveryActivityDays * 24 * 60 * 60 * 1000;
 const maxForkPagesPerProject = Number.parseInt(process.env.MAX_FORK_PAGES_PER_PROJECT ?? "10", 10);
 const maxOwnerExpansions = Number.parseInt(process.env.MAX_OWNER_EXPANSIONS ?? "24", 10);
+const maxSearchPages = Number.parseInt(process.env.MAX_SEARCH_PAGES ?? "3", 10);
 const maxOwnerRepos = Number.parseInt(process.env.MAX_OWNER_REPOS ?? "100", 10);
 
 async function github(endpoint) {
@@ -49,16 +50,13 @@ async function githubForks(repository) {
 
 const queries = [
   "topic:ps2-homebrew",
-  "topic:playstation-2 homebrew",
+  "topic:playstation-2",
   "ps2sdk in:readme",
-  "\"PlayStation 2\" homebrew in:readme",
+  "\"PlayStation 2\" in:readme",
   "ps2 in:name,description",
-  "\"PlayStation 2\" in:name,description",
   "\"ps2 port\" in:name,description,readme",
-  "topic:ps2-homebrew fork:true",
-  "ps2 in:name,description fork:true",
-  "\"PlayStation 2\" in:name,description fork:true",
-  "\"ps2 port\" in:name,description,readme fork:true"
+  "ps2 in:name,description fork:only",
+  "\"ps2 port\" in:name,description,readme fork:only"
 ];
 
 const existingFiles = (await fs.readdir(projectsDir)).filter((name) => name.endsWith(".md"));
@@ -90,32 +88,17 @@ const candidates = new Map();
 const processed = new Set();
 const ownerSeeds = new Map();
 
-// Always inspect the PS2SP repository owner's public repositories. This is derived from
-// content/site.md rather than hardcoded, so a fork/deployment of PS2SP naturally follows
-// its own maintainer account.
-try {
-  const siteRaw = await fs.readFile(new URL("../content/site.md", import.meta.url), "utf8");
-  const siteData = matter(siteRaw).data;
-  const match = String(siteData?.repository ?? "").match(
-    /^https?:\/\/github\.com\/([^/]+)\/[^/]+\/?$/i
-  );
-  if (match?.[1]) ownerSeeds.set(match[1], null);
-} catch {}
-
-// Owners that already have software in the catalog are high-value discovery sources.
-// This is what allows maintained sibling projects and forks-of-forks to be found without
-// relying on GitHub's globally ranked search results.
-for (const project of knownProjects) {
-  const owner = project.repository.split("/")[0];
-  if (owner) ownerSeeds.set(owner, null);
-}
-
 for (const query of queries) {
-  const result = await github(
-    `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=100`
-  );
+  for (let page = 1; page <= maxSearchPages; page++) {
+    const result = await github(
+      `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=100&page=${page}`
+    );
 
-  for (const repo of result?.items ?? []) candidates.set(String(repo.id), repo);
+    const items = result?.items ?? [];
+    for (const repo of items) candidates.set(String(repo.id), repo);
+
+    if (items.length < 100) break;
+  }
 }
 
 function slugify(value) {
@@ -277,6 +260,20 @@ function explicitRepositorySignal(repo) {
   );
 }
 
+function catalogProjectForFork(repo) {
+  if (!repo?.fork) return null;
+
+  const lineage = new Set(
+    [repo.parent?.full_name, repo.source?.full_name]
+      .filter(Boolean)
+      .map((value) => value.toLowerCase())
+  );
+
+  return knownProjects.find((project) =>
+    lineage.has(project.repository.toLowerCase())
+  ) ?? null;
+}
+
 async function fileExists(url) {
   try {
     await fs.access(url);
@@ -307,6 +304,7 @@ async function verifyMaintainedFork(repo, release) {
 
   return {
     parent: repo.parent.full_name,
+    source: repo.source?.full_name ?? repo.parent.full_name,
     aheadBy: compare.ahead_by,
     aheadCommitDate
   };
@@ -418,11 +416,16 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
   const maturity = evaluateMaturity(repo, readmeText, releases);
   const release = maturity.stableRelease ?? maturity.publishedRelease;
   const rootNames = Array.isArray(root) ? root.map((item) => item.name.toLowerCase()) : [];
-  const forkStatus = repo.fork ? await verifyMaintainedFork(repo, maturity.stableRelease) : null;
+  const forkCatalogProject = repo.fork ? catalogProjectForFork(repo) : null;
+  const forkStatus =
+    repo.fork && forkCatalogProject
+      ? await verifyMaintainedFork(repo, maturity.stableRelease)
+      : null;
 
-  // Forks are intentionally stricter: they must be independently maintained and have
-  // a published non-prerelease release before they can enter discovery.
-  if (repo.fork && !forkStatus) return;
+  // Forks are intentionally stricter: they must belong to the fork network of an
+  // existing catalog project, be independently maintained, and have a published
+  // non-prerelease release before they can enter discovery.
+  if (repo.fork && (!forkCatalogProject || !forkStatus)) return;
 
   const { score, evidence } = scoreRepository({
     repo,
@@ -457,6 +460,7 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     fork: repo.fork
       ? {
           parent: forkStatus.parent,
+          source: forkStatus.source,
           aheadBy: forkStatus.aheadBy,
           latestAheadCommit: forkStatus.aheadCommitDate
         }
@@ -468,9 +472,7 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     const target = new URL(`${slug}.md`, projectsDir);
     if (await fileExists(target)) return;
 
-    const parentCatalog = repo.fork
-      ? knownProjects.find((project) => project.repository.toLowerCase() === forkStatus.parent.toLowerCase())
-      : null;
+    const parentCatalog = repo.fork ? forkCatalogProject : null;
 
     const method = repo.fork ? "github-maintained-fork-search" : origin;
     const tags = repo.fork
@@ -519,7 +521,7 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
     };
 
     const body = repo.fork
-      ? `\nAutomatically discovered as an actively maintained PS2 fork of **${forkStatus.parent}**. The fork has commits ahead of its parent, recent fork-specific activity, and at least one published GitHub release.\n`
+      ? `\nAutomatically discovered as an actively maintained PS2 fork in the **${forkStatus.source}** network (immediate parent: ${forkStatus.parent}). The fork has commits ahead of its parent, recent fork-specific activity, and at least one published GitHub release.\n`
       : "\nAutomatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.\n";
 
     await fs.writeFile(target, matter.stringify(body, project), "utf8");
@@ -546,8 +548,9 @@ for (const candidate of candidates.values()) {
 }
 
 // A PS2 port can live on a non-default branch while the default README remains unchanged.
-// Once an owner has a strong PS2 repository, inspect that owner's other recently-pushed
-// repositories for PS2 branch/release signals. This catches ports without special-casing owners.
+// Once global discovery finds a strong PS2 repository, inspect that same owner's other
+// recently-pushed repositories for PS2 branch/release signals. This is generic graph
+// expansion from discovered evidence, not a maintainer allowlist.
 for (const [owner, seededType] of [...ownerSeeds.entries()].slice(0, maxOwnerExpansions)) {
   let ownerType = seededType;
   if (!ownerType) {
@@ -604,8 +607,9 @@ for (const parent of knownProjects) {
 
     const releases = await github(`/repos/${fork.full_name}/releases?per_page=10`);
     const release = latestStableRelease(releases);
-    const forkStatus = await verifyMaintainedFork(repo, release);
-    if (!forkStatus) continue;
+    const forkCatalogProject = catalogProjectForFork(repo);
+    const forkStatus = forkCatalogProject ? await verifyMaintainedFork(repo, release) : null;
+    if (!forkCatalogProject || !forkStatus) continue;
 
     const slug = slugify(`${repo.name}-${repo.owner.login}`);
     const target = new URL(`${slug}.md`, projectsDir);
@@ -617,9 +621,9 @@ for (const parent of knownProjects) {
       summary:
         repo.description ||
         `Actively maintained fork of ${parent.name} with its own commits and published releases.`,
-      categories: parent.categories,
-      tags: [...new Set([...parent.tags, "maintained-fork", "auto-discovered"])],
-      features: parent.features,
+      categories: forkCatalogProject.categories,
+      tags: [...new Set([...forkCatalogProject.tags, "maintained-fork", "auto-discovered"])],
+      features: forkCatalogProject.features,
       authors: [],
       license: repo.license?.spdx_id ?? null,
       homepage: repo.homepage || null,
