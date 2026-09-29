@@ -1,39 +1,41 @@
 ---
-name: "launcHER"
-slug: "launcher"
-summary: "Device-flexible PlayStation 2 launcher designed to start EMBER and related homebrew flows."
+name: launcHER
+slug: launcher
+summary: >-
+  Device-flexible PlayStation 2 launcher designed to start EMBER and related
+  homebrew flows.
 categories:
-  - "launchers"
-  - "boot-tools"
+  - launchers
+  - boot-tools
 tags:
-  - "launcher"
-  - "ember"
-  - "osdsys"
-  - "ps2bbl"
+  - launcher
+  - ember
+  - osdsys
+  - ps2bbl
 features:
-  - "usb"
-  - "hdd"
-  - "memory-card"
+  - usb
+  - hdd
+  - memory-card
 authors: []
 license: null
-homepage: "https://nathanneurotic.github.io/launcHER/"
+homepage: 'https://nathanneurotic.github.io/launcHER/'
 source:
   provider: github
-  repository: "NathanNeurotic/launcHER"
-  repositoryId: "956987400"
+  repository: NathanNeurotic/launcHER
+  repositoryId: '956987400'
 repository:
   archived: false
-  defaultBranch: "EMBER"
+  defaultBranch: EMBER
   stars: 5
   forks: 0
-  lastCommit: "2026-09-28T18:18:07Z"
+  lastCommit: '2026-09-28T18:17:08Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: latest
+  name: launcHER latest
+  publishedAt: '2026-09-28T01:09:02Z'
+  url: 'https://github.com/NathanNeurotic/launcHER/releases/tag/latest'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:28.545Z'
 automation:
   sync: true
 discovery:
@@ -42,5 +44,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Device-flexible PlayStation 2 launcher designed to start EMBER and related homebrew flows.

@@ -1,35 +1,35 @@
 ---
-name: "FreeDVDBoot"
-slug: "freedvdboot"
-summary: "PlayStation 2 DVD Player exploit and homebrew entry point."
+name: FreeDVDBoot
+slug: freedvdboot
+summary: PlayStation 2 DVD Player exploit and homebrew entry point.
 categories:
-  - "boot-tools"
+  - boot-tools
 tags:
-  - "dvd"
-  - "exploit"
-  - "homebrew"
+  - dvd
+  - exploit
+  - homebrew
 features:
-  - "optical-disc"
+  - optical-disc
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "ps2homebrew/FreeDVDBoot"
-  repositoryId: "439671342"
+  repository: ps2homebrew/FreeDVDBoot
+  repositoryId: '439671342'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 17
   forks: 0
-  lastCommit: "2022-02-10T14:25:29Z"
+  lastCommit: '2022-02-10T14:11:22Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: '1.0'
+  name: Prebuilt ISO Aug-2020
+  publishedAt: '2022-02-02T08:42:14Z'
+  url: 'https://github.com/ps2homebrew/FreeDVDBoot/releases/tag/1.0'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:26.280Z'
 automation:
   sync: true
 discovery:
@@ -38,5 +38,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 PlayStation 2 DVD Player exploit and homebrew entry point.

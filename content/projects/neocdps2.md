@@ -1,35 +1,34 @@
 ---
-name: "NeoCD/PS2"
-slug: "neocdps2"
-summary: "Neo Geo CD emulator for PlayStation 2."
+name: NeoCD/PS2
+slug: neocdps2
+summary: Neo Geo CD emulator for PlayStation 2.
 categories:
-  - "emulators"
+  - emulators
 tags:
-  - "neo-geo"
-  - "neo-geo-cd"
-  - "emulator"
-features:
-  []
+  - neo-geo
+  - neo-geo-cd
+  - emulator
+features: []
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "ps2homebrew/neocdps2"
-  repositoryId: "74839728"
+  repository: ps2homebrew/neocdps2
+  repositoryId: '74839728'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 0
   forks: 0
-  lastCommit: "2016-12-10T22:11:26Z"
+  lastCommit: '2005-02-24T23:21:48Z'
 latestRelease:
   tag: null
   name: null
   publishedAt: null
   url: null
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:29.026Z'
 automation:
   sync: true
 discovery:
@@ -38,5 +37,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Neo Geo CD emulator for PlayStation 2.

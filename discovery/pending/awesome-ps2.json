@@ -1,0 +1,13 @@
+{
+  "repository": "terremoth/awesome-ps2",
+  "repositoryId": "306975172",
+  "url": "https://github.com/terremoth/awesome-ps2",
+  "description": "Awesome PlayStation 2 Apps and Homebrews",
+  "score": 85,
+  "evidence": [
+    "PS2 topic",
+    "README explicitly mentions PlayStation 2",
+    "README contains PS2 development/toolchain evidence"
+  ],
+  "discoveredAt": "2026-09-29T00:04:47.807Z"
+}

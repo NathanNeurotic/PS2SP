@@ -1,36 +1,36 @@
 ---
-name: "HDLGameInstaller"
-slug: "hdlgameinstaller"
-summary: "On-console HDLoader game installer for PlayStation 2."
+name: HDLGameInstaller
+slug: hdlgameinstaller
+summary: On-console HDLoader game installer for PlayStation 2.
 categories:
-  - "installers"
-  - "utilities"
+  - installers
+  - utilities
 tags:
-  - "hdd"
-  - "hdloader"
-  - "installer"
+  - hdd
+  - hdloader
+  - installer
 features:
-  - "hdd"
+  - hdd
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "ps2homebrew/HDLGameInstaller"
-  repositoryId: "453964986"
+  repository: ps2homebrew/HDLGameInstaller
+  repositoryId: '453964986'
 repository:
   archived: false
-  defaultBranch: "main"
+  defaultBranch: main
   stars: 42
   forks: 8
-  lastCommit: "2024-09-04T23:26:49Z"
+  lastCommit: '2024-09-04T23:25:51Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: v0.821
+  name: HDLGameInstaller v0.821 + PC client (2018/12/09)
+  publishedAt: '2022-02-01T15:31:18Z'
+  url: 'https://github.com/ps2homebrew/HDLGameInstaller/releases/tag/v0.821'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:28.245Z'
 automation:
   sync: true
 discovery:
@@ -39,5 +39,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 On-console HDLoader game installer for PlayStation 2.

@@ -1,35 +1,34 @@
 ---
-name: "FCEUmm-PS2"
-slug: "fceumm-ps2"
-summary: "Nintendo Entertainment System and Famicom emulator for PlayStation 2."
+name: FCEUmm-PS2
+slug: fceumm-ps2
+summary: Nintendo Entertainment System and Famicom emulator for PlayStation 2.
 categories:
-  - "emulators"
+  - emulators
 tags:
-  - "nes"
-  - "famicom"
-  - "emulator"
-features:
-  []
+  - nes
+  - famicom
+  - emulator
+features: []
 authors: []
-license: "GPL-2.0"
+license: GPL-2.0
 homepage: null
 source:
   provider: github
-  repository: "ps2homebrew/Fceumm-PS2"
-  repositoryId: "13358897"
+  repository: ps2homebrew/Fceumm-PS2
+  repositoryId: '13358897'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 45
   forks: 19
-  lastCommit: "2026-07-20T08:42:52Z"
+  lastCommit: '2026-07-19T13:55:39Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: v0.3.3
+  name: 'FCEUmm-PS2 [x.3.3]'
+  publishedAt: '2018-04-28T18:01:25Z'
+  url: 'https://github.com/ps2homebrew/Fceumm-PS2/releases/tag/v0.3.3'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:26.006Z'
 automation:
   sync: true
 discovery:
@@ -38,5 +37,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Nintendo Entertainment System and Famicom emulator for PlayStation 2.

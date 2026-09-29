@@ -1,35 +1,34 @@
 ---
-name: "PGEN"
-slug: "pgen"
-summary: "Sega Genesis and Mega Drive emulator for PlayStation 2."
+name: PGEN
+slug: pgen
+summary: Sega Genesis and Mega Drive emulator for PlayStation 2.
 categories:
-  - "emulators"
+  - emulators
 tags:
-  - "genesis"
-  - "megadrive"
-  - "emulator"
-features:
-  []
+  - genesis
+  - megadrive
+  - emulator
+features: []
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "ps2homebrew/pgen"
-  repositoryId: "174160232"
+  repository: ps2homebrew/pgen
+  repositoryId: '174160232'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 34
   forks: 4
-  lastCommit: "2021-02-25T11:02:55Z"
+  lastCommit: '2021-01-17T19:39:54Z'
 latestRelease:
   tag: null
   name: null
   publishedAt: null
   url: null
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:31.721Z'
 automation:
   sync: true
 discovery:
@@ -38,5 +37,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Sega Genesis and Mega Drive emulator for PlayStation 2.

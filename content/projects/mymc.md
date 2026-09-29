@@ -1,37 +1,37 @@
 ---
-name: "mymc"
-slug: "mymc"
-summary: "Desktop utility for working with PlayStation 2 memory card images."
+name: mymc
+slug: mymc
+summary: Desktop utility for working with PlayStation 2 memory card images.
 categories:
-  - "host-tools"
-  - "save-tools"
-  - "utilities"
+  - host-tools
+  - save-tools
+  - utilities
 tags:
-  - "memory-card"
-  - "saves"
-  - "images"
+  - memory-card
+  - saves
+  - images
 features:
-  - "memory-card"
+  - memory-card
 authors: []
 license: null
-homepage: "http://www.csclub.uwaterloo.ca:11068/mymc/"
+homepage: 'http://www.csclub.uwaterloo.ca:11068/mymc/'
 source:
   provider: github
-  repository: "ps2dev/mymc"
-  repositoryId: "5230752"
+  repository: ps2dev/mymc
+  repositoryId: '5230752'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 131
   forks: 32
-  lastCommit: "2023-07-29T15:12:29Z"
+  lastCommit: '2022-09-16T15:20:19Z'
 latestRelease:
   tag: null
   name: null
   publishedAt: null
   url: null
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:28.776Z'
 automation:
   sync: true
 discovery:
@@ -40,5 +40,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Desktop utility for working with PlayStation 2 memory card images.

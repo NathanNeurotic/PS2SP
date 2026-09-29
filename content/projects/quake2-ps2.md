@@ -1,37 +1,37 @@
 ---
-name: "Quake II PS2"
-slug: "quake2-ps2"
-summary: "Homebrew port of id Software's Quake II to PlayStation 2."
+name: Quake II PS2
+slug: quake2-ps2
+summary: Homebrew port of id Software's Quake II to PlayStation 2.
 categories:
-  - "ports"
-  - "games"
+  - ports
+  - games
 tags:
-  - "quake"
-  - "quake2"
-  - "fps"
-  - "ps2sdk"
+  - quake
+  - quake2
+  - fps
+  - ps2sdk
 features:
-  - "memory-card"
+  - memory-card
 authors: []
-license: "GPL-2.0"
-homepage: "https://glampert.github.io"
+license: GPL-2.0
+homepage: 'https://glampert.github.io'
 source:
   provider: github
-  repository: "glampert/quake2-ps2"
-  repositoryId: "44992514"
+  repository: glampert/quake2-ps2
+  repositoryId: '44992514'
 repository:
   archived: false
-  defaultBranch: "main"
+  defaultBranch: main
   stars: 49
   forks: 13
-  lastCommit: "2026-09-28T14:12:50Z"
+  lastCommit: '2026-09-28T14:08:54Z'
 latestRelease:
   tag: null
   name: null
   publishedAt: null
   url: null
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:36.455Z'
 automation:
   sync: true
 discovery:
@@ -40,5 +40,4 @@ discovery:
 verified: true
 featured: true
 ---
-
 Homebrew port of id Software's Quake II to PlayStation 2.

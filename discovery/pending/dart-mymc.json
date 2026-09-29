@@ -1,0 +1,12 @@
+{
+  "repository": "BAD-AL/dart_mymc",
+  "repositoryId": "1173973984",
+  "url": "https://github.com/BAD-AL/dart_mymc",
+  "description": "Dart port of 'mymc', CLI & library",
+  "score": 80,
+  "evidence": [
+    "ps2-homebrew topic",
+    "PS2 topic"
+  ],
+  "discoveredAt": "2026-09-29T00:04:46.577Z"
+}

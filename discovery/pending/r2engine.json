@@ -1,0 +1,13 @@
+{
+  "repository": "Rider-UwU-Black/R2Engine",
+  "repositoryId": "1384688571",
+  "url": "https://github.com/Rider-UwU-Black/R2Engine",
+  "description": "A small 3D game engine and editor for building Windows and PlayStation 2 homebrew games.",
+  "score": 85,
+  "evidence": [
+    "PS2 topic",
+    "README explicitly mentions PlayStation 2",
+    "README contains PS2 development/toolchain evidence"
+  ],
+  "discoveredAt": "2026-09-29T00:04:48.306Z"
+}

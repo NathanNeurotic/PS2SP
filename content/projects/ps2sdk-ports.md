@@ -1,36 +1,35 @@
 ---
-name: "PS2SDK Ports"
-slug: "ps2sdk-ports"
-summary: "Ports of useful third-party libraries to PS2SDK."
+name: PS2SDK Ports
+slug: ps2sdk-ports
+summary: Ports of useful third-party libraries to PS2SDK.
 categories:
-  - "libraries"
-  - "development"
+  - libraries
+  - development
 tags:
-  - "ps2sdk"
-  - "ports"
-  - "libraries"
-features:
-  []
+  - ps2sdk
+  - ports
+  - libraries
+features: []
 authors: []
-license: "NOASSERTION"
+license: NOASSERTION
 homepage: null
 source:
   provider: github
-  repository: "ps2dev/ps2sdk-ports"
-  repositoryId: "896674"
+  repository: ps2dev/ps2sdk-ports
+  repositoryId: '896674'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 125
   forks: 50
-  lastCommit: "2026-09-28T17:06:14Z"
+  lastCommit: '2026-09-28T17:06:14Z'
 latestRelease:
   tag: null
   name: null
   publishedAt: null
   url: null
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:35.377Z'
 automation:
   sync: true
 discovery:
@@ -39,5 +38,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Ports of useful third-party libraries to PS2SDK.

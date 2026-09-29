@@ -1,0 +1,13 @@
+{
+  "repository": "helworks/helengine-ps2",
+  "repositoryId": "1224076998",
+  "url": "https://github.com/helworks/helengine-ps2",
+  "description": "helengine PlayStation 2 handler",
+  "score": 85,
+  "evidence": [
+    "ps2-homebrew topic",
+    "PS2 topic",
+    "native build files present"
+  ],
+  "discoveredAt": "2026-09-29T00:04:43.168Z"
+}

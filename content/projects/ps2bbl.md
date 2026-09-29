@@ -1,37 +1,37 @@
 ---
-name: "PlayStation 2 Basic BootLoader"
-slug: "ps2bbl"
-summary: "Minimal bootloader for PlayStation 2 and PSX-DESR systems."
+name: PlayStation 2 Basic BootLoader
+slug: ps2bbl
+summary: Minimal bootloader for PlayStation 2 and PSX-DESR systems.
 categories:
-  - "boot-tools"
-  - "launchers"
+  - boot-tools
+  - launchers
 tags:
-  - "ps2bbl"
-  - "bootloader"
-  - "psx-desr"
+  - ps2bbl
+  - bootloader
+  - psx-desr
 features:
-  - "usb"
-  - "memory-card"
+  - usb
+  - memory-card
 authors: []
-license: "GPL-3.0"
-homepage: "https://israpps.github.io/PlayStation2-Basic-BootLoader/"
+license: GPL-3.0
+homepage: 'https://israpps.github.io/PlayStation2-Basic-BootLoader/'
 source:
   provider: github
-  repository: "israpps/PlayStation2-Basic-BootLoader"
-  repositoryId: "547609917"
+  repository: israpps/PlayStation2-Basic-BootLoader
+  repositoryId: '547609917'
 repository:
   archived: false
-  defaultBranch: "main"
+  defaultBranch: main
   stars: 203
   forks: 19
-  lastCommit: "2026-03-02T20:20:47Z"
+  lastCommit: '2026-02-11T15:58:05Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: v1.2.0
+  name: 'v1.2.0 release '
+  publishedAt: '2023-10-05T16:29:09Z'
+  url: 'https://github.com/israpps/PlayStation2-Basic-BootLoader/releases/tag/v1.2.0'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:32.541Z'
 automation:
   sync: true
 discovery:
@@ -40,5 +40,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 PlayStation 2 Basic BootLoader (PS2BBL) is a compact bootloader designed to initialize supported PlayStation 2-class systems and launch homebrew applications from configurable paths.

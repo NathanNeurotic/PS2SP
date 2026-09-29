@@ -1,34 +1,33 @@
 ---
-name: "PS2GDB"
-slug: "ps2gdb"
-summary: "GDB debugging stub for PlayStation 2 homebrew development."
+name: PS2GDB
+slug: ps2gdb
+summary: GDB debugging stub for PlayStation 2 homebrew development.
 categories:
-  - "development"
+  - development
 tags:
-  - "gdb"
-  - "debugging"
-features:
-  []
+  - gdb
+  - debugging
+features: []
 authors: []
 license: null
 homepage: null
 source:
   provider: github
-  repository: "ps2dev/ps2gdb"
-  repositoryId: "894517"
+  repository: ps2dev/ps2gdb
+  repositoryId: '894517'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 28
   forks: 8
-  lastCommit: "2024-03-17T18:46:06Z"
+  lastCommit: '2024-03-17T18:45:39Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: latest
+  name: Latest development build
+  publishedAt: '2024-03-17T18:46:06Z'
+  url: 'https://github.com/ps2dev/ps2gdb/releases/tag/latest'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:33.655Z'
 automation:
   sync: true
 discovery:
@@ -37,5 +36,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 GDB debugging stub for PlayStation 2 homebrew development.

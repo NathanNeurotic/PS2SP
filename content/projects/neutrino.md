@@ -1,38 +1,38 @@
 ---
-name: "Neutrino"
-slug: "neutrino"
-summary: "Small, fast and modular PlayStation 2 device emulator and game loader."
+name: Neutrino
+slug: neutrino
+summary: 'Small, fast and modular PlayStation 2 device emulator and game loader.'
 categories:
-  - "loaders"
+  - loaders
 tags:
-  - "neutrino"
-  - "loader"
-  - "device-emulation"
+  - neutrino
+  - loader
+  - device-emulation
 features:
-  - "usb"
-  - "hdd"
-  - "network"
-  - "mx4sio"
+  - usb
+  - hdd
+  - network
+  - mx4sio
 authors: []
-license: "AFL-3.0"
+license: AFL-3.0
 homepage: null
 source:
   provider: github
-  repository: "ps2max32/neutrino"
-  repositoryId: "657734267"
+  repository: ps2max32/neutrino
+  repositoryId: '657734267'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 282
   forks: 22
-  lastCommit: "2026-08-31T10:38:48Z"
+  lastCommit: '2026-08-31T10:38:04Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: v1.8.0
+  name: v1.8.0
+  publishedAt: '2026-03-10T20:15:15Z'
+  url: 'https://github.com/ps2max32/neutrino/releases/tag/v1.8.0'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:29.423Z'
 automation:
   sync: true
 discovery:
@@ -41,5 +41,4 @@ discovery:
 verified: true
 featured: true
 ---
-
 Small, fast and modular PlayStation 2 device emulator and game loader.

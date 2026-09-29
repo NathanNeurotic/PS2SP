@@ -1,37 +1,39 @@
 ---
-name: "HDL Batch Installer"
-slug: "hdl-batch-installer"
-summary: "Desktop GUI for HDL Dump with batch game installation and PlayStation 2 HDD management."
+name: HDL Batch Installer
+slug: hdl-batch-installer
+summary: >-
+  Desktop GUI for HDL Dump with batch game installation and PlayStation 2 HDD
+  management.
 categories:
-  - "host-tools"
-  - "installers"
-  - "utilities"
+  - host-tools
+  - installers
+  - utilities
 tags:
-  - "hdl-dump"
-  - "hdd"
-  - "game-installer"
+  - hdl-dump
+  - hdd
+  - game-installer
 features:
-  - "hdd"
+  - hdd
 authors: []
-license: "GPL-3.0"
-homepage: "https://israpps.github.io/HDL-Batch-installer/"
+license: GPL-3.0
+homepage: 'https://israpps.github.io/HDL-Batch-installer/'
 source:
   provider: github
-  repository: "israpps/HDL-Batch-installer"
-  repositoryId: "378763394"
+  repository: israpps/HDL-Batch-installer
+  repositoryId: '378763394'
 repository:
   archived: false
-  defaultBranch: "main"
+  defaultBranch: main
   stars: 327
   forks: 22
-  lastCommit: "2026-03-25T20:24:04Z"
+  lastCommit: '2026-03-25T20:23:35Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: Latest
+  name: v3.7.0 - Revision 3
+  publishedAt: '2026-03-25T20:24:04Z'
+  url: 'https://github.com/israpps/HDL-Batch-installer/releases/tag/Latest'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:27.799Z'
 automation:
   sync: true
 discovery:
@@ -40,5 +42,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 Desktop GUI for HDL Dump with batch game installation and PlayStation 2 HDD management.

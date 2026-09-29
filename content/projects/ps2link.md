@@ -1,36 +1,36 @@
 ---
-name: "PS2Link"
-slug: "ps2link"
-summary: "PlayStation 2-side boot loader used for network development workflows."
+name: PS2Link
+slug: ps2link
+summary: PlayStation 2-side boot loader used for network development workflows.
 categories:
-  - "development"
-  - "networking"
+  - development
+  - networking
 tags:
-  - "debugging"
-  - "network"
-  - "elf"
+  - debugging
+  - network
+  - elf
 features:
-  - "network"
+  - network
 authors: []
-license: "NOASSERTION"
+license: NOASSERTION
 homepage: null
 source:
   provider: github
-  repository: "ps2dev/ps2link"
-  repositoryId: "894507"
+  repository: ps2dev/ps2link
+  repositoryId: '894507'
 repository:
   archived: false
-  defaultBranch: "master"
+  defaultBranch: master
   stars: 116
   forks: 25
-  lastCommit: "2026-04-25T13:19:24Z"
+  lastCommit: '2026-04-25T13:18:51Z'
 latestRelease:
-  tag: null
-  name: null
-  publishedAt: null
-  url: null
+  tag: RenameMe
+  name: v1.9.1
+  publishedAt: '2024-04-02T11:16:17Z'
+  url: 'https://github.com/ps2dev/ps2link/releases/tag/RenameMe'
 activity:
-  lastChecked: null
+  lastChecked: '2026-09-29T00:04:34.850Z'
 automation:
   sync: true
 discovery:
@@ -39,5 +39,4 @@ discovery:
 verified: true
 featured: false
 ---
-
 PlayStation 2-side boot loader used for network development workflows.
