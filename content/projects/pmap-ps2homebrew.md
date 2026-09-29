@@ -26,7 +26,7 @@ latestRelease:
   publishedAt: '2023-07-23T14:12:53Z'
   url: 'https://github.com/ps2homebrew/PMAP/releases/tag/v1.2'
 activity:
-  lastSynchronized: '2026-09-29T02:56:45.068Z'
+  lastSynchronized: '2026-09-29T04:57:53.380Z'
 automation:
   sync: true
 discovery:

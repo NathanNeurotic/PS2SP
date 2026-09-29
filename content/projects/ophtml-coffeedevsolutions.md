@@ -26,11 +26,11 @@ latestRelease:
   publishedAt: '2026-09-26T15:35:15Z'
   url: 'https://github.com/coffeedevsolutions/OPHTML/releases/tag/v0.10.0'
 activity:
-  lastSynchronized: '2026-09-29T04:54:49.800Z'
+  lastSynchronized: '2026-09-29T04:57:53.380Z'
 automation:
   sync: true
 discovery:
-  method: 'incremental:"PS2 homebrew" in:name,description,readme'
+  method: 'starred:NathanNeurotic'
   confidence: 100
   evidence:
     - README explicitly mentions PlayStation 2

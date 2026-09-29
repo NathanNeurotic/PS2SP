@@ -26,11 +26,11 @@ latestRelease:
   publishedAt: '2026-06-27T13:39:48Z'
   url: 'https://github.com/GorGylka/Server2PS2/releases/tag/3'
 activity:
-  lastSynchronized: '2026-09-29T02:56:45.068Z'
+  lastSynchronized: '2026-09-29T04:57:53.380Z'
 automation:
   sync: true
 discovery:
-  method: 'incremental:topic:ps2'
+  method: 'starred:NathanNeurotic'
   confidence: 100
   evidence:
     - PS2-specific topic

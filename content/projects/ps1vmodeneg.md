@@ -28,7 +28,7 @@ latestRelease:
   publishedAt: '2022-02-02T08:08:54Z'
   url: 'https://github.com/ps2homebrew/PS1VModeNeg/releases/tag/1.10'
 activity:
-  lastSynchronized: '2026-09-29T02:56:45.068Z'
+  lastSynchronized: '2026-09-29T04:57:53.380Z'
 automation:
   sync: true
 discovery:

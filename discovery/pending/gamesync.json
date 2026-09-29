@@ -3,16 +3,23 @@
   "repositoryId": "1150548355",
   "url": "https://github.com/pepasjc/GameSync",
   "description": "Sync save data between multiple 3ds devices",
-  "score": 90,
+  "score": 85,
   "evidence": [
     "README explicitly mentions PlayStation 2",
     "README contains PS2 development/toolchain evidence",
     "published GitHub release present",
-    "release contains a PS2-style ELF asset"
+    "release contains an ELF",
+    "repository pushed within the last 180 days"
   ],
-  "origin": "pending-recheck",
-  "maturity": "released-active",
+  "origin": "github-search",
+  "maturity": {
+    "state": "released-wip",
+    "publishEligible": false,
+    "queueEligible": true,
+    "reasons": [
+      "stable release exists, but repository text still identifies the project as unfinished or experimental"
+    ]
+  },
   "fork": null,
-  "discoveredAt": "2026-09-29T00:27:49.336Z",
-  "checkedAt": "2026-09-29T04:54:49.800Z"
+  "discoveredAt": "2026-09-29T00:27:49.336Z"
 }

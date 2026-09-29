@@ -9,9 +9,9 @@
     "repository description explicitly identifies PS2",
     "published GitHub release present"
   ],
-  "origin": "incremental:ps2 in:name,description",
+  "origin": "starred:NathanNeurotic",
   "maturity": "released-active",
   "fork": null,
-  "discoveredAt": "2026-09-29T02:56:45.068Z",
-  "checkedAt": "2026-09-29T02:56:45.068Z"
+  "discoveredAt": "2026-09-29T04:57:53.380Z",
+  "checkedAt": "2026-09-29T04:57:53.380Z"
 }
