@@ -18,9 +18,11 @@ const headers = {
   "User-Agent": "PS2SP-discovery"
 };
 
-const forkActivityDays = Number.parseInt(process.env.FORK_ACTIVITY_DAYS ?? "180", 10);
-const forkActivityCutoff = Date.now() - forkActivityDays * 24 * 60 * 60 * 1000;
+const discoveryActivityDays = Number.parseInt(process.env.DISCOVERY_ACTIVITY_DAYS ?? "180", 10);
+const activityCutoff = Date.now() - discoveryActivityDays * 24 * 60 * 60 * 1000;
 const maxForkPagesPerProject = Number.parseInt(process.env.MAX_FORK_PAGES_PER_PROJECT ?? "10", 10);
+const maxOwnerExpansions = Number.parseInt(process.env.MAX_OWNER_EXPANSIONS ?? "8", 10);
+const maxOwnerRepos = Number.parseInt(process.env.MAX_OWNER_REPOS ?? "100", 10);
 
 async function github(endpoint) {
   const response = await fetch(`https://api.github.com${endpoint}`, { headers });
@@ -49,7 +51,10 @@ const queries = [
   "topic:ps2-homebrew",
   "topic:playstation-2 homebrew",
   "ps2sdk in:readme",
-  "\"PlayStation 2\" homebrew in:readme"
+  "\"PlayStation 2\" homebrew in:readme",
+  "ps2 in:name,description",
+  "\"PlayStation 2\" in:name,description",
+  "\"ps2 port\" in:name,description,readme"
 ];
 
 const existingFiles = (await fs.readdir(projectsDir)).filter((name) => name.endsWith(".md"));
@@ -78,10 +83,12 @@ for (const name of existingFiles) {
 }
 
 const candidates = new Map();
+const processed = new Set();
+const ownerSeeds = new Map();
 
 for (const query of queries) {
   const result = await github(
-    `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=25`
+    `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=50`
   );
 
   for (const repo of result?.items ?? []) candidates.set(String(repo.id), repo);
@@ -95,9 +102,13 @@ function hasAny(text, patterns) {
   return patterns.some((pattern) => pattern.test(text));
 }
 
+function hasPs2Token(text) {
+  return /(^|[^a-z0-9])ps2([^a-z0-9]|$)/i.test(text ?? "") || /playstation\s*2/i.test(text ?? "");
+}
+
 function isRecent(dateValue) {
   const time = Date.parse(dateValue ?? "");
-  return Number.isFinite(time) && time >= forkActivityCutoff;
+  return Number.isFinite(time) && time >= activityCutoff;
 }
 
 function latestAheadCommitDate(compare) {
@@ -115,6 +126,32 @@ function latestPublishedRelease(releases) {
   return releases.find((release) => !release.draft && release.published_at) ?? null;
 }
 
+function releaseHasPs2Signal(release) {
+  if (!release) return false;
+
+  if (hasPs2Token(release.name) || hasPs2Token(release.tag_name)) return true;
+  return (release.assets ?? []).some((asset) => hasPs2Token(asset.name));
+}
+
+function releaseHasElf(release) {
+  return Boolean(release?.assets?.some((asset) => /\.elf$/i.test(asset.name)));
+}
+
+function branchHasPs2Signal(branches) {
+  return (branches ?? []).some((branch) => hasPs2Token(branch?.name));
+}
+
+function explicitRepositorySignal(repo) {
+  const topics = repo?.topics ?? [];
+  return (
+    hasPs2Token(repo?.name) ||
+    hasPs2Token(repo?.description) ||
+    topics.includes("ps2-homebrew") ||
+    topics.includes("playstation-2") ||
+    topics.includes("ps2")
+  );
+}
+
 async function fileExists(url) {
   try {
     await fs.access(url);
@@ -124,30 +161,34 @@ async function fileExists(url) {
   }
 }
 
-let published = 0;
-let queued = 0;
-let forkPublished = 0;
+async function verifyMaintainedFork(repo, release) {
+  if (!repo?.fork || !repo.parent?.full_name) return null;
+  if (repo.archived || repo.disabled || !isRecent(repo.pushed_at) || !release) return null;
 
-for (const candidate of candidates.values()) {
-  if (candidate.fork) continue;
-  if (known.has(candidate.full_name.toLowerCase()) || known.has(`id:${candidate.id}`)) continue;
+  const parentBranch = repo.parent.default_branch || "master";
+  const forkBranch = repo.default_branch;
+  if (!forkBranch || !repo.owner?.login) return null;
 
-  const [repo, readme, release, root] = await Promise.all([
-    github(`/repos/${candidate.full_name}`),
-    github(`/repos/${candidate.full_name}/readme`),
-    github(`/repos/${candidate.full_name}/releases/latest`),
-    github(`/repos/${candidate.full_name}/contents`)
-  ]);
+  const compare = await github(
+    `/repos/${repo.parent.full_name}/compare/${encodeURIComponent(parentBranch)}...${encodeURIComponent(
+      `${repo.owner.login}:${forkBranch}`
+    )}`
+  );
 
-  if (!repo) continue;
+  if (!compare || (compare.ahead_by ?? 0) < 1) return null;
 
-  let readmeText = "";
-  if (readme?.content) {
-    readmeText = Buffer.from(readme.content.replace(/\n/g, ""), "base64").toString("utf8");
-  }
+  const aheadCommitDate = latestAheadCommitDate(compare);
+  if (!aheadCommitDate || !isRecent(aheadCommitDate)) return null;
 
+  return {
+    parent: repo.parent.full_name,
+    aheadBy: compare.ahead_by,
+    aheadCommitDate
+  };
+}
+
+function scoreRepository({ repo, readmeText, release, rootNames, branches, forkStatus }) {
   const topics = repo.topics ?? [];
-  const rootNames = Array.isArray(root) ? root.map((item) => item.name.toLowerCase()) : [];
   let score = 0;
   const evidence = [];
 
@@ -161,12 +202,22 @@ for (const candidate of candidates.values()) {
     evidence.push("PS2 topic");
   }
 
+  if (hasPs2Token(repo.name)) {
+    score += 55;
+    evidence.push("repository name explicitly identifies PS2");
+  }
+
+  if (hasPs2Token(repo.description)) {
+    score += 45;
+    evidence.push("repository description explicitly identifies PS2");
+  }
+
   if (/playstation\s*2/i.test(readmeText)) {
     score += 25;
     evidence.push("README explicitly mentions PlayStation 2");
   }
 
-  if (hasAny(readmeText, [/ps2sdk/i, /\$PS2DEV/i, /ee-g(cc|\+\+)/i, /gskit/i])) {
+  if (hasAny(readmeText, [/ps2sdk/i, /\$PS2DEV/i, /ee-g(cc|\+\+)/i, /gskit/i, /ps2build/i])) {
     score += 25;
     evidence.push("README contains PS2 development/toolchain evidence");
   }
@@ -176,15 +227,92 @@ for (const candidate of candidates.values()) {
     evidence.push("native build files present");
   }
 
-  if (release?.assets?.some((asset) => /\.elf$/i.test(asset.name))) {
+  if (branchHasPs2Signal(branches)) {
+    score += 40;
+    evidence.push("repository has a PS2-specific branch");
+  }
+
+  if (release) {
+    score += 10;
+    evidence.push("published GitHub release present");
+  }
+
+  if (releaseHasPs2Signal(release)) {
+    score += 30;
+    evidence.push("release name or asset explicitly identifies PS2");
+  }
+
+  if (releaseHasElf(release)) {
     score += 15;
     evidence.push("release contains an ELF");
   }
 
-  score = Math.min(score, 100);
-  if (score < 70) continue;
+  if (isRecent(repo.pushed_at)) {
+    score += 10;
+    evidence.push(`repository pushed within the last ${discoveryActivityDays} days`);
+  }
 
-  const slug = slugify(repo.name);
+  if (branchHasPs2Signal(branches) && releaseHasPs2Signal(release)) {
+    score += 15;
+    evidence.push("PS2 branch and PS2 release corroborate each other");
+  }
+
+  if (forkStatus) {
+    score += 20;
+    evidence.push("fork has recent commits ahead of its parent and a published release");
+  }
+
+  return { score: Math.min(score, 100), evidence };
+}
+
+let published = 0;
+let queued = 0;
+let forkPublished = 0;
+
+async function processCandidate(candidate, origin = "github-search", prefetched = {}) {
+  if (!candidate?.full_name || processed.has(String(candidate.id))) return;
+  processed.add(String(candidate.id));
+
+  if (known.has(candidate.full_name.toLowerCase()) || known.has(`id:${candidate.id}`)) return;
+
+  const repo = prefetched.repo ?? (await github(`/repos/${candidate.full_name}`));
+  if (!repo || repo.archived || repo.disabled) return;
+
+  const [readme, releases, root, branches] = await Promise.all([
+    github(`/repos/${repo.full_name}/readme`),
+    prefetched.releases ?? github(`/repos/${repo.full_name}/releases?per_page=10`),
+    github(`/repos/${repo.full_name}/contents`),
+    prefetched.branches ?? github(`/repos/${repo.full_name}/branches?per_page=100`)
+  ]);
+
+  let readmeText = "";
+  if (readme?.content) {
+    readmeText = Buffer.from(readme.content.replace(/\n/g, ""), "base64").toString("utf8");
+  }
+
+  const release = latestPublishedRelease(releases);
+  const rootNames = Array.isArray(root) ? root.map((item) => item.name.toLowerCase()) : [];
+  const forkStatus = repo.fork ? await verifyMaintainedFork(repo, release) : null;
+
+  // Forks are intentionally stricter: they must be independently maintained and released.
+  if (repo.fork && !forkStatus) return;
+
+  const { score, evidence } = scoreRepository({
+    repo,
+    readmeText,
+    release,
+    rootNames,
+    branches: Array.isArray(branches) ? branches : [],
+    forkStatus
+  });
+
+  if (score < 70) return;
+
+  if (explicitRepositorySignal(repo) && ownerSeeds.size < maxOwnerExpansions) {
+    ownerSeeds.set(repo.owner.login, repo.owner.type ?? "User");
+  }
+
+  const slug = repo.fork ? slugify(`${repo.name}-${repo.owner.login}`) : slugify(repo.name);
   const record = {
     repository: repo.full_name,
     repositoryId: String(repo.id),
@@ -192,20 +320,41 @@ for (const candidate of candidates.values()) {
     description: repo.description,
     score,
     evidence,
+    origin,
+    fork: repo.fork
+      ? {
+          parent: forkStatus.parent,
+          aheadBy: forkStatus.aheadBy,
+          latestAheadCommit: forkStatus.aheadCommitDate
+        }
+      : null,
     discoveredAt: new Date().toISOString()
   };
 
   if (score >= 95) {
     const target = new URL(`${slug}.md`, projectsDir);
-    if (await fileExists(target)) continue;
+    if (await fileExists(target)) return;
+
+    const parentCatalog = repo.fork
+      ? knownProjects.find((project) => project.repository.toLowerCase() === forkStatus.parent.toLowerCase())
+      : null;
+
+    const method = repo.fork ? "github-maintained-fork-search" : origin;
+    const tags = repo.fork
+      ? [...new Set([...(parentCatalog?.tags ?? []), "maintained-fork", "auto-discovered"])]
+      : ["auto-discovered"];
 
     const project = {
       name: repo.name,
       slug,
-      summary: repo.description || "PlayStation 2 homebrew project discovered by PS2SP.",
-      categories: ["uncategorized"],
-      tags: ["auto-discovered"],
-      features: [],
+      summary:
+        repo.description ||
+        (repo.fork
+          ? `Actively maintained PS2 fork of ${forkStatus.parent} with its own commits and published releases.`
+          : "PlayStation 2 homebrew project discovered by PS2SP."),
+      categories: parentCatalog?.categories ?? ["uncategorized"],
+      tags,
+      features: parentCatalog?.features ?? [],
       authors: [],
       license: repo.license?.spdx_id ?? null,
       homepage: repo.homepage || null,
@@ -231,19 +380,26 @@ for (const candidate of candidates.values()) {
         : { tag: null, name: null, publishedAt: null, url: null },
       activity: { lastChecked: new Date().toISOString() },
       automation: { sync: true },
-      discovery: { method: "github-search", confidence: score },
+      discovery: { method, confidence: score },
       verified: false,
       featured: false
     };
 
-    const body =
-      "\nAutomatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.\n";
+    const body = repo.fork
+      ? `\nAutomatically discovered as an actively maintained PS2 fork of **${forkStatus.parent}**. The fork has commits ahead of its parent, recent fork-specific activity, and at least one published GitHub release.\n`
+      : "\nAutomatically discovered by PS2SP from strong PlayStation 2-specific repository signals. This entry can be expanded and curated without affecting automated repository metadata.\n";
 
     await fs.writeFile(target, matter.stringify(body, project), "utf8");
     known.add(repo.full_name.toLowerCase());
     known.add(`id:${repo.id}`);
-    published++;
-    console.log(`auto-published ${repo.full_name} (${score})`);
+
+    if (repo.fork) {
+      forkPublished++;
+      console.log(`auto-published maintained fork ${repo.full_name} (${score})`);
+    } else {
+      published++;
+      console.log(`auto-published ${repo.full_name} (${score})`);
+    }
   } else {
     const target = new URL(`${slug}.json`, pendingDir);
     await fs.writeFile(target, JSON.stringify(record, null, 2) + "\n", "utf8");
@@ -252,6 +408,50 @@ for (const candidate of candidates.values()) {
   }
 }
 
+for (const candidate of candidates.values()) {
+  await processCandidate(candidate);
+}
+
+// A PS2 port can live on a non-default branch while the default README remains unchanged.
+// Once an owner has a strong PS2 repository, inspect that owner's other recently-pushed
+// repositories for PS2 branch/release signals. This catches ports without special-casing owners.
+for (const [owner, ownerType] of [...ownerSeeds.entries()].slice(0, maxOwnerExpansions)) {
+  const endpoint =
+    ownerType === "Organization"
+      ? `/orgs/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`
+      : `/users/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`;
+
+  const repos = await github(endpoint);
+  if (!Array.isArray(repos)) continue;
+
+  for (const repo of repos) {
+    if (!repo?.full_name || processed.has(String(repo.id))) continue;
+    if (known.has(repo.full_name.toLowerCase()) || known.has(`id:${repo.id}`)) continue;
+    if (repo.archived || repo.disabled || !isRecent(repo.pushed_at)) continue;
+
+    const [branches, releases] = await Promise.all([
+      github(`/repos/${repo.full_name}/branches?per_page=100`),
+      github(`/repos/${repo.full_name}/releases?per_page=10`)
+    ]);
+
+    const release = latestPublishedRelease(releases);
+    const relatedSignal =
+      explicitRepositorySignal(repo) ||
+      branchHasPs2Signal(Array.isArray(branches) ? branches : []) ||
+      releaseHasPs2Signal(release);
+
+    if (!relatedSignal) continue;
+
+    await processCandidate(repo, "github-related-owner", {
+      repo,
+      branches: Array.isArray(branches) ? branches : [],
+      releases: Array.isArray(releases) ? releases : []
+    });
+  }
+}
+
+// Also inspect forks of already-cataloged PS2 projects. These inherit the parent's categories
+// and features, but only when they are demonstrably maintained and have a published release.
 for (const parent of knownProjects) {
   const forks = await githubForks(parent.repository);
 
@@ -260,27 +460,13 @@ for (const parent of knownProjects) {
     if (known.has(fork.full_name.toLowerCase()) || known.has(`id:${fork.id}`)) continue;
     if (!isRecent(fork.pushed_at)) continue;
 
-    const parentBranch = parent.defaultBranch || "master";
-    const forkBranch = fork.default_branch;
-    if (!forkBranch || !fork.owner?.login) continue;
-
-    const compare = await github(
-      `/repos/${parent.repository}/compare/${encodeURIComponent(parentBranch)}...${encodeURIComponent(
-        `${fork.owner.login}:${forkBranch}`
-      )}`
-    );
-
-    if (!compare || (compare.ahead_by ?? 0) < 1) continue;
-
-    const aheadCommitDate = latestAheadCommitDate(compare);
-    if (!aheadCommitDate || !isRecent(aheadCommitDate)) continue;
+    const repo = await github(`/repos/${fork.full_name}`);
+    if (!repo) continue;
 
     const releases = await github(`/repos/${fork.full_name}/releases?per_page=10`);
     const release = latestPublishedRelease(releases);
-    if (!release) continue;
-
-    const repo = await github(`/repos/${fork.full_name}`);
-    if (!repo || repo.archived || repo.disabled) continue;
+    const forkStatus = await verifyMaintainedFork(repo, release);
+    if (!forkStatus) continue;
 
     const slug = slugify(`${repo.name}-${repo.owner.login}`);
     const target = new URL(`${slug}.md`, projectsDir);
@@ -324,7 +510,7 @@ for (const parent of knownProjects) {
     };
 
     const body =
-      `\nAutomatically discovered as an actively maintained fork of **${parent.name}** (${parent.repository}). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than ${forkActivityDays} days, and the fork has at least one published non-draft GitHub release.\n`;
+      `\nAutomatically discovered as an actively maintained fork of **${parent.name}** (${parent.repository}). PS2SP only auto-adds a fork when its default branch has commits ahead of the registered parent, one of those fork-specific commits is newer than ${discoveryActivityDays} days, and the fork has at least one published non-draft GitHub release.\n`;
 
     await fs.writeFile(target, matter.stringify(body, project), "utf8");
     known.add(repo.full_name.toLowerCase());
@@ -332,7 +518,7 @@ for (const parent of knownProjects) {
     forkPublished++;
 
     console.log(
-      `auto-published maintained fork ${repo.full_name} of ${parent.repository} (${compare.ahead_by} commits ahead; release ${release.tag_name ?? release.name ?? "published"})`
+      `auto-published maintained fork ${repo.full_name} of ${parent.repository} (${forkStatus.aheadBy} commits ahead; release ${release.tag_name ?? release.name ?? "published"})`
     );
   }
 }
