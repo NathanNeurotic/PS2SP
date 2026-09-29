@@ -21,7 +21,7 @@ const headers = {
 const discoveryActivityDays = Number.parseInt(process.env.DISCOVERY_ACTIVITY_DAYS ?? "180", 10);
 const activityCutoff = Date.now() - discoveryActivityDays * 24 * 60 * 60 * 1000;
 const maxForkPagesPerProject = Number.parseInt(process.env.MAX_FORK_PAGES_PER_PROJECT ?? "10", 10);
-const maxOwnerExpansions = Number.parseInt(process.env.MAX_OWNER_EXPANSIONS ?? "8", 10);
+const maxOwnerExpansions = Number.parseInt(process.env.MAX_OWNER_EXPANSIONS ?? "24", 10);
 const maxOwnerRepos = Number.parseInt(process.env.MAX_OWNER_REPOS ?? "100", 10);
 
 async function github(endpoint) {
@@ -54,7 +54,11 @@ const queries = [
   "\"PlayStation 2\" homebrew in:readme",
   "ps2 in:name,description",
   "\"PlayStation 2\" in:name,description",
-  "\"ps2 port\" in:name,description,readme"
+  "\"ps2 port\" in:name,description,readme",
+  "topic:ps2-homebrew fork:true",
+  "ps2 in:name,description fork:true",
+  "\"PlayStation 2\" in:name,description fork:true",
+  "\"ps2 port\" in:name,description,readme fork:true"
 ];
 
 const existingFiles = (await fs.readdir(projectsDir)).filter((name) => name.endsWith(".md"));
@@ -86,9 +90,29 @@ const candidates = new Map();
 const processed = new Set();
 const ownerSeeds = new Map();
 
+// Always inspect the PS2SP repository owner's public repositories. This is derived from
+// content/site.md rather than hardcoded, so a fork/deployment of PS2SP naturally follows
+// its own maintainer account.
+try {
+  const siteRaw = await fs.readFile(new URL("../content/site.md", import.meta.url), "utf8");
+  const siteData = matter(siteRaw).data;
+  const match = String(siteData?.repository ?? "").match(
+    /^https?:\/\/github\.com\/([^/]+)\/[^/]+\/?$/i
+  );
+  if (match?.[1]) ownerSeeds.set(match[1], null);
+} catch {}
+
+// Owners that already have software in the catalog are high-value discovery sources.
+// This is what allows maintained sibling projects and forks-of-forks to be found without
+// relying on GitHub's globally ranked search results.
+for (const project of knownProjects) {
+  const owner = project.repository.split("/")[0];
+  if (owner) ownerSeeds.set(owner, null);
+}
+
 for (const query of queries) {
   const result = await github(
-    `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=50`
+    `/search/repositories?q=${encodeURIComponent(query)}&sort=updated&order=desc&per_page=100`
   );
 
   for (const repo of result?.items ?? []) candidates.set(String(repo.id), repo);
@@ -411,8 +435,8 @@ async function processCandidate(candidate, origin = "github-search", prefetched 
 
   if (score < 70 || (!maturity.publishEligible && !maturity.queueEligible)) return;
 
-  if (explicitRepositorySignal(repo) && ownerSeeds.size < maxOwnerExpansions) {
-    ownerSeeds.set(repo.owner.login, repo.owner.type ?? "User");
+  if (explicitRepositorySignal(repo)) {
+    ownerSeeds.set(repo.owner.login, repo.owner.type ?? null);
   }
 
   const slug = repo.fork ? slugify(`${repo.name}-${repo.owner.login}`) : slugify(repo.name);
@@ -524,7 +548,13 @@ for (const candidate of candidates.values()) {
 // A PS2 port can live on a non-default branch while the default README remains unchanged.
 // Once an owner has a strong PS2 repository, inspect that owner's other recently-pushed
 // repositories for PS2 branch/release signals. This catches ports without special-casing owners.
-for (const [owner, ownerType] of [...ownerSeeds.entries()].slice(0, maxOwnerExpansions)) {
+for (const [owner, seededType] of [...ownerSeeds.entries()].slice(0, maxOwnerExpansions)) {
+  let ownerType = seededType;
+  if (!ownerType) {
+    const ownerInfo = await github(`/users/${owner}`);
+    ownerType = ownerInfo?.type ?? "User";
+  }
+
   const endpoint =
     ownerType === "Organization"
       ? `/orgs/${owner}/repos?type=public&sort=pushed&per_page=${maxOwnerRepos}`
