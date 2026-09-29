@@ -71,12 +71,14 @@ It:
 2. checks releases, repository state, stars, forks, and recent activity;
 3. searches for possible new PS2 homebrew;
 4. checks forks of projects already in the registry;
-5. auto-publishes a fork only when it has fork-specific commits ahead of its registered parent, a fork-specific commit from the last 180 days, and at least one published non-draft GitHub release;
-6. auto-publishes non-fork candidates only when they have very strong PS2-specific evidence;
-7. stores lower-confidence non-fork candidates in `discovery/pending/`;
-8. commits changed Markdown back to the repository.
+5. separates PS2 relevance from project maturity so unfinished work is not promoted just because it looks PS2-related;
+6. auto-publishes non-fork candidates only when they have strong PS2-specific evidence and at least one published non-prerelease GitHub release;
+7. keeps recent unreleased, prerelease-only, or explicitly WIP projects in `discovery/pending/` for review instead of publishing them;
+8. ignores stale unreleased projects and repositories that explicitly describe themselves as abandoned, broken, deprecated, or unusable;
+9. auto-publishes a fork only when it has recent fork-specific commits ahead of its parent and a published non-prerelease GitHub release;
+10. commits changed Markdown back to the repository.
 
-The fork activity window defaults to 180 days and can be overridden with the `FORK_ACTIVITY_DAYS` environment variable.
+The discovery activity window defaults to 180 days and can be overridden with the `DISCOVERY_ACTIVITY_DAYS` environment variable. Released software can remain discoverable even if it is older; unreleased projects must show recent activity to stay in the review queue.
 
 No personal access token is required for the default workflow. It uses the repository's scoped `GITHUB_TOKEN`.
 
