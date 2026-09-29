@@ -63,16 +63,20 @@ Every catalog commit then causes a new deployment automatically.
 
 ## Catalog automation
 
-The scheduled workflow in `.github/workflows/catalog-sync.yml` runs every six hours.
+The scheduled workflow in `.github/workflows/catalog-sync.yml` runs once every 24 hours and can also be started manually with GitHub Actions' **Run workflow** button.
 
 It:
 
 1. synchronizes known GitHub projects;
 2. checks releases, repository state, stars, forks, and recent activity;
 3. searches for possible new PS2 homebrew;
-4. auto-publishes only candidates with very strong PS2-specific evidence;
-5. stores lower-confidence candidates in `discovery/pending/`;
-6. commits changed Markdown back to the repository.
+4. checks forks of projects already in the registry;
+5. auto-publishes a fork only when it has fork-specific commits ahead of its registered parent, a fork-specific commit from the last 180 days, and at least one published non-draft GitHub release;
+6. auto-publishes non-fork candidates only when they have very strong PS2-specific evidence;
+7. stores lower-confidence non-fork candidates in `discovery/pending/`;
+8. commits changed Markdown back to the repository.
+
+The fork activity window defaults to 180 days and can be overridden with the `FORK_ACTIVITY_DAYS` environment variable.
 
 No personal access token is required for the default workflow. It uses the repository's scoped `GITHUB_TOKEN`.
 

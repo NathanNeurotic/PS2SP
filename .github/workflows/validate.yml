@@ -25,5 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Validate catalog scripts
+        run: |
+          node --check scripts/sync-github.mjs
+          node --check scripts/discover-github.mjs
+
       - name: Build static site
         run: npm run build
