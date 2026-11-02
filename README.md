@@ -1,5 +1,7 @@
 # PS2SP — PlayStation 2 Software Plaza
 https://nathanneurotic.github.io/PS2SP/
+
+
 PS2SP is a community-oriented index of PlayStation 2 software and the wider PS2 ecosystem.
 
 ## Goals
