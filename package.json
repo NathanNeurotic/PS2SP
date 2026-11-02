@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:gh-pages": "astro build && node scripts/prepare-gh-pages.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "catalog:sync": "node scripts/sync-github.mjs",

@@ -1,0 +1,98 @@
+name: Sync Fork & Deploy to GitHub Pages
+
+on:
+  schedule:
+    # Auto-sync and deploy daily at 04:00 UTC
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 1. Sync from upstream (only on schedule or manual dispatch, and only on the fork)
+  sync:
+    if: github.repository != 'johnson-cooper/PS2SP' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out fork repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/johnson-cooper/PS2SP.git
+          git fetch upstream main
+
+          UPSTREAM_SHA=$(git rev-parse upstream/main)
+          LOCAL_SHA=$(git rev-parse HEAD)
+          echo "Upstream main commit: $UPSTREAM_SHA"
+          echo "Current fork commit:  $LOCAL_SHA"
+
+          if [ "$LOCAL_SHA" != "$UPSTREAM_SHA" ]; then
+            echo "Merging upstream updates..."
+            git merge upstream/main --no-edit -m "chore(mirror): sync with upstream main" || {
+              echo "Merge conflict encountered during sync; attempting automatic resolution..."
+              git merge --abort
+              git rebase upstream/main || {
+                git rebase --abort
+                echo "Falling back to reset to upstream main..."
+                git reset --hard upstream/main
+              }
+            }
+            git push origin main
+          else
+            echo "Fork is already up to date with upstream."
+          fi
+
+  # 2. Build and deploy mirror site to GitHub Pages
+  deploy:
+    if: always() && github.repository != 'johnson-cooper/PS2SP' && (needs.sync.result == 'success' || needs.sync.result == 'skipped')
+    needs: [sync]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro mirror for GitHub Pages
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+        run: npm run build:gh-pages
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
