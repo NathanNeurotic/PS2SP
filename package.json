@@ -7,9 +7,11 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "test": "node --test scripts/tests/*.test.mjs",
     "dev": "astro dev",
     "build": "astro build",
-    "build:gh-pages": "astro build && node scripts/prepare-gh-pages.mjs",
+    "build:gh-pages": "npm run build && node scripts/prepare-gh-pages.mjs && node scripts/audit-build-assets.mjs && node scripts/audit-mirror.mjs",
+    "postbuild": "node scripts/audit-build-assets.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "catalog:sync": "node scripts/sync-github.mjs",

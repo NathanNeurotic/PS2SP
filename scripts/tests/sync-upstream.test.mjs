@@ -1,0 +1,43 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { execFileSync } from "node:child_process";
+import { syncUpstream } from "../sync-upstream.mjs";
+
+test("sync preserves fork commits, is idempotent, and aborts conflicts without changing history", async (t) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "ps2sp-sync-"));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const upstream = path.join(root, "upstream");
+  const fork = path.join(root, "fork");
+  const git = (cwd, ...args) => execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+  await fs.mkdir(upstream);
+  git(upstream, "init", "-b", "main");
+  const identity = (cwd) => { git(cwd, "config", "core.autocrlf", "false"); git(cwd, "config", "commit.gpgsign", "false"); git(cwd, "config", "user.name", "Test"); git(cwd, "config", "user.email", "test@example.invalid"); };
+  identity(upstream);
+  const commit = async (cwd, file, content) => {
+    await fs.writeFile(path.join(cwd, file), content);
+    git(cwd, "add", file); git(cwd, "commit", "-m", "fixture");
+  };
+  await commit(upstream, "shared.txt", "original\n");
+  git(root, "clone", "-c", "core.autocrlf=false", upstream, fork); identity(fork);
+  await commit(fork, "mirror.txt", "keep mirror\n");
+  const forkCommit = git(fork, "rev-parse", "HEAD");
+  await commit(upstream, "new.txt", "upstream\n");
+  assert.equal(syncUpstream({ cwd: fork, upstream }), true);
+  git(fork, "merge-base", "--is-ancestor", forkCommit, "HEAD");
+  assert.equal(await fs.readFile(path.join(fork, "mirror.txt"), "utf8"), "keep mirror\n");
+  const merged = git(fork, "rev-parse", "HEAD");
+  assert.equal(syncUpstream({ cwd: fork, upstream }), false);
+  assert.equal(git(fork, "rev-parse", "HEAD"), merged);
+  await commit(fork, "shared.txt", "fork change\n");
+  await commit(upstream, "shared.txt", "upstream change\n");
+  const before = git(fork, "rev-parse", "HEAD");
+  assert.throws(() => syncUpstream({ cwd: fork, upstream }), /history preserved/);
+  assert.equal(git(fork, "rev-parse", "HEAD"), before);
+  assert.equal(git(fork, "status", "--porcelain"), "");
+  assert.equal(await fs.readFile(path.join(fork, "shared.txt"), "utf8"), "fork change\n");
+  await fs.writeFile(path.join(fork, "shared.txt"), "uncommitted\n");
+  assert.throws(() => syncUpstream({ cwd: fork, upstream }), /clean checkout/);
+});

@@ -45,7 +45,7 @@ if (basePath) {
     if (filePath.endsWith(".html")) {
       // Replace href="/...", src="/...", action="/..." if not already prefixed
       const nextContent = content.replace(/(href|src|action)="\/([^"]*)"/g, (match, attr, target) => {
-        if (target.startsWith(basePath.slice(1) + "/") || target === basePath.slice(1)) {
+        if (target.startsWith("/") || target.startsWith(basePath.slice(1) + "/") || target === basePath.slice(1)) {
           return match;
         }
         return `${attr}="${basePath}/${target}"`;
@@ -56,7 +56,7 @@ if (basePath) {
       }
     }
 
-    if (filePath.endsWith(".js") || filePath.endsWith(".html") || filePath.endsWith(".json")) {
+    if (filePath.endsWith(".js") || filePath.endsWith(".html")) {
       // Fix API endpoints like fetch("/api/...") or next: "/api/..."
       const nextContent = content.replace(/(["'`])\/api\/([^"'`]*)\1/g, (match, quote, rest) => {
         if (basePath && !rest.startsWith(basePath.slice(1))) {
@@ -66,18 +66,6 @@ if (basePath) {
       });
       if (nextContent !== content) {
         content = nextContent;
-        changed = true;
-      }
-    }
-
-    if (filePath.endsWith(".js")) {
-      // Allow pagination validation regex to match the prefixed API route
-      const nextRegex = content.replaceAll(
-        "/^\\/api\\/resources\\/\\d+\\.json$/",
-        `new RegExp("^(${basePath})?\\\\/api\\\\/resources\\\\/\\\\d+\\\\.json$")`
-      );
-      if (nextRegex !== content) {
-        content = nextRegex;
         changed = true;
       }
     }
