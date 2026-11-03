@@ -256,7 +256,8 @@ const categorySymbolData = Object.fromEntries(categorySymbols);
 
         const anchor = document.createElement("a");
         anchor.className = "project-index-row";
-        anchor.href = entry.href;
+        anchor.href = entry.href.startsWith("/") && !entry.href.startsWith("//")
+          ? `${import.meta.env.BASE_URL.replace(/\/$/, "")}${entry.href}` : entry.href;
         if (entry.external) {
           anchor.target = "_blank";
           anchor.rel = "noopener noreferrer";

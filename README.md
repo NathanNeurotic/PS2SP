@@ -51,6 +51,32 @@ npm run build
 
 The generated site is written to `dist/`.
 
+Every `npm run build` also checks all generated assets against Cloudflare Pages'
+25 MiB per-file limit, including builds in scheduled catalog workflows.
+
+The resource API is paginated: start at `/api/resources.json`, consume its
+`groups`, and follow `next` until it is absent. Subsequent URLs have the form
+`/api/resources/1.json`. Pages target at most 4 MiB of UTF-8 JSON; categories
+can span pages, so concatenate links for matching categories. Consumers that
+previously assumed a single response must follow `next` to retrieve the complete
+catalog. The resource page does this automatically and only enables the complete
+index after every page loads successfully.
+
+Run `npm test` for offline discovery regression tests. These use simulated hosts
+and temporary catalogs, so they do not modify the live catalog or depend on
+external services. CI runs them on every pull request and before external Git
+discovery.
+
+External Git discovery retries timeouts, network failures, HTTP 408/429, and
+server errors once. If the retry fails, that host is deferred for the remainder
+of the run while other hosts continue. Each attempt counts against the request
+budget, and the 30-second deadline covers both headers and the JSON body.
+Warnings identify the failed endpoint; `discovery/external-git-state.json` records
+`lastRun.failedHosts`. A successful job with deferred hosts means partial discovery,
+not that every host was reachable. Existing links and unfinished branch scans
+are preserved for later scheduled runs. Authentication errors and invalid JSON
+still fail the job and require investigation.
+
 ## Cloudflare Pages
 
 Use:
@@ -143,3 +169,17 @@ The build exposes:
 ## License
 
 Site source and catalog metadata can be licensed separately from third-party software. PS2SP does not redistribute third-party binaries by default; software download links point to upstream project infrastructure.
+
+## Fork mirror maintenance
+
+The fork syncs upstream daily at 04:00 UTC and can be synced manually with the
+`Sync Fork & Deploy to GitHub Pages` workflow. Sync merges upstream into the fork
+without rebasing or resetting fork history. A conflict aborts the merge and fails
+the job; resolve it in a pull request, preserving the mirror configuration.
+Tests, UI checks, and the complete mirror build run before a sync is pushed.
+A concurrent change to main causes the normal push to fail safely; rerun the job.
+
+For local mirror validation, set `BASE_PATH=/PS2SP` and run
+`npm run build:gh-pages`. This runs the normal asset audit, prepares Pages output,
+checks final asset sizes again, and loads every resource API page under the mirror
+base path. Pull request CI runs this same build before changes can be reviewed.
