@@ -239,6 +239,8 @@ main { padding: 28px 0 56px; }
 .footer-links { display: flex; gap: 18px; color: var(--muted); font-size: .86rem; }
 .footer-links a:hover { color: var(--text); }
 .legal { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 14px; font-size: .76rem; }
+.color-scheme-credit { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .76rem; }
+.color-scheme-credit a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
 
 .eyebrow {
   margin: 0 0 9px;
