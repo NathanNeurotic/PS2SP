@@ -1,17 +1,17 @@
 :root {
   color-scheme: dark;
-  --bg: #040610;
-  --bg-raised: #080d1c;
-  --panel: #0b1124;
-  --panel-soft: rgba(10, 17, 37, .72);
-  --text: #f4f6ff;
-  --muted: #94a0bf;
-  --muted-2: #65708d;
-  --line: rgba(146, 165, 224, .16);
-  --line-strong: rgba(157, 177, 238, .34);
-  --accent: #91aaff;
-  --accent-2: #b5a2ff;
-  --cyan: #70d6ff;
+  --bg: #121212;
+  --bg-raised: #191919;
+  --panel: #1e1e1e;
+  --panel-soft: rgba(26, 26, 26, .78);
+  --text: #e0e0e0;
+  --muted: #b0b0b0;
+  --muted-2: #888888;
+  --line: #444444;
+  --line-strong: #666666;
+  --accent: #888888;
+  --accent-2: #b0b0b0;
+  --cyan: #b0b0b0;
   --good: #75e0ba;
   --warn: #e3b876;
   --max: 1280px;
@@ -74,7 +74,7 @@ button { color: inherit; }
   right: -20vw;
   top: -24vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(92, 122, 224, .14), rgba(92, 122, 224, .03) 38%, transparent 69%);
+  background: radial-gradient(circle, rgba(100, 100, 100, .10), rgba(100, 100, 100, .02) 38%, transparent 69%);
 }
 .plaza-axis {
   position: absolute;
@@ -82,11 +82,11 @@ button { color: inherit; }
   bottom: 0;
   left: max(22px, calc((100vw - var(--max)) / 2 - 28px));
   width: 1px;
-  background: linear-gradient(to bottom, transparent, rgba(145,170,255,.24) 12%, rgba(145,170,255,.08) 82%, transparent);
+  background: linear-gradient(to bottom, transparent, rgba(136,136,136,.24) 12%, rgba(136,136,136,.08) 82%, transparent);
 }
 .plaza-orbit {
   position: absolute;
-  border: 1px solid rgba(126,151,230,.08);
+  border: 1px solid rgba(136,136,136,.08);
   border-radius: 50%;
 }
 .plaza-orbit-a { width: 680px; height: 680px; left: -430px; top: 240px; }
@@ -97,7 +97,7 @@ button { color: inherit; }
   top: 0;
   z-index: 30;
   border-bottom: 1px solid var(--line);
-  background: rgba(4, 6, 16, .88);
+  background: rgba(18, 18, 18, .90);
   backdrop-filter: blur(16px);
 }
 .header-inner, .context-inner, main, .footer-grid {
@@ -188,7 +188,7 @@ button { color: inherit; }
 
 .context-bar {
   border-bottom: 1px solid rgba(146,165,224,.08);
-  background: rgba(8, 12, 26, .72);
+  background: rgba(24, 24, 24, .82);
 }
 .context-inner {
   min-height: var(--context-h);
@@ -221,7 +221,7 @@ button { color: inherit; }
 main { padding: 28px 0 56px; }
 .site-footer {
   border-top: 1px solid var(--line);
-  background: rgba(5,8,18,.86);
+  background: rgba(21,21,21,.90);
 }
 .footer-grid {
   padding: 20px 0 28px;
