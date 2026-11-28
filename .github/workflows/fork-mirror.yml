@@ -29,7 +29,12 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN cannot push commits that touch .github/workflows/.
+          # When upstream changes a workflow, the sync push needs a token with
+          # Workflows write access: set FORK_SYNC_TOKEN (fine-grained PAT,
+          # Contents + Workflows read/write, this repo only). Falls back to
+          # GITHUB_TOKEN when the secret is not set.
+          token: ${{ secrets.FORK_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
